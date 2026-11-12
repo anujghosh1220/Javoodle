@@ -1,17 +1,21 @@
 -- ============================================================================
 -- Javoodle · RLS verification script
--- Run in the Supabase SQL Editor (or psql) as postgres AFTER 0001_init.sql
--- and seed.sql. Simulates anon / authenticated-student / authenticated-admin
--- by setting ROLE + the request.jwt.claims GUC that auth.jwt() reads.
+-- Run in the Supabase SQL Editor (or psql) as postgres AFTER 0001_init.sql,
+-- 0002_answer_column_privileges.sql and seed.sql.
 --
--- EXPECTED RESULT: the script completes with no errors. Any "RLS FAIL"
--- exception means a policy is wrong — do NOT ignore it.
--- NOTE: "permission denied" style errors inside EXPECTED-FAILURE blocks are
--- normal; they are caught by the surrounding DO block.
+-- Simulates anon / authenticated-non-admin / authenticated-admin /
+-- service_role by switching ROLE + the request.jwt.claims GUC that
+-- auth.jwt() reads. Session-level SET is used (NOT begin/rollback) because
+-- the SQL Editor may wrap the whole script in one implicit transaction —
+-- an explicit ROLLBACK would erase the fixtures.
+--
+-- EXPECTED RESULT: script completes with NO errors. Any "RLS FAIL" exception
+-- means a policy/grant is wrong. "permission denied" inside EXPECTED-FAILURE
+-- blocks is normal — it is caught by the surrounding DO block.
 -- ============================================================================
 
 -- ---------------------------------------------------------------------------
--- Fixtures (autocommit — visible to all following transactions)
+-- Fixtures (persist until the cleanup section at the bottom)
 -- ---------------------------------------------------------------------------
 insert into public.students (display_name) values ('__rls_test__');
 
@@ -35,11 +39,10 @@ join public.student_sessions ss on ss.student_id = s.id
 where s.display_name = '__rls_test__';
 
 -- ============================================================================
--- TEST 1 — ANONYMOUS role
+-- TEST 1 — ANONYMOUS
 -- ============================================================================
-begin;
-set local role anon;
-set local "request.jwt.claims" = '{}';
+set role anon;
+set "request.jwt.claims" = '{}';
 
 do $$
 declare n int;
@@ -59,13 +62,12 @@ begin
   select count(*) into n from public.student_answers;
   if n <> 0 then raise exception 'RLS FAIL: anon read student_answers'; end if;
 
-  -- approved question visible, draft hidden
   select count(*) into n from public.questions where text = '__rls_approved__';
   if n <> 1 then raise exception 'RLS FAIL: anon cannot read approved question'; end if;
   select count(*) into n from public.questions where text = '__rls_draft__';
   if n <> 0 then raise exception 'RLS FAIL: anon sees draft question'; end if;
 
-  -- answer-bearing columns must NOT be selectable by anon (grant-level)
+  -- answer-bearing columns must NOT be selectable (grant-level check)
   begin
     perform correct_answer_text from public.questions limit 1;
     raise exception 'RLS FAIL: anon can read correct_answer_text';
@@ -86,14 +88,12 @@ begin
   exception when insufficient_privilege then null;
   end;
 end $$;
-rollback;
 
 -- ============================================================================
--- TEST 2 — AUTHENTICATED NON-ADMIN (a regular Supabase user, no admin claim)
+-- TEST 2 — AUTHENTICATED NON-ADMIN
 -- ============================================================================
-begin;
-set local role authenticated;
-set local "request.jwt.claims" =
+set role authenticated;
+set "request.jwt.claims" =
   '{"sub":"00000000-0000-0000-0000-000000000001","role":"authenticated","app_metadata":{}}';
 
 do $$
@@ -105,7 +105,6 @@ begin
   select count(*) into n from public.practice_history;
   if n <> 0 then raise exception 'RLS FAIL: non-admin read practice_history'; end if;
 
-  -- cannot write even though table-level INSERT grant exists (RLS blocks)
   begin
     insert into public.questions (type, text, marks, status)
     values ('mcq', '__rls_intrusion2__', 1, 'approved');
@@ -113,14 +112,12 @@ begin
   exception when insufficient_privilege then null;
   end;
 end $$;
-rollback;
 
 -- ============================================================================
 -- TEST 3 — ADMIN (app_metadata.role = 'admin')
 -- ============================================================================
-begin;
-set local role authenticated;
-set local "request.jwt.claims" =
+set role authenticated;
+set "request.jwt.claims" =
   '{"sub":"00000000-0000-0000-0000-0000000000ad","role":"authenticated","app_metadata":{"role":"admin"}}';
 
 do $$
@@ -138,14 +135,12 @@ begin
   insert into public.questions (type, text, marks, status)
   values ('mcq', '__rls_admin_write__', 1, 'draft');
 end $$;
-rollback;
 
 -- ============================================================================
--- TEST 4 — SERVICE ROLE bypasses RLS (used by server routes after auth)
+-- TEST 4 — SERVICE ROLE bypasses RLS
 -- ============================================================================
-begin;
-set local role service_role;
-set local "request.jwt.claims" = '{}';
+set role service_role;
+set "request.jwt.claims" = '{}';
 
 do $$
 declare n int;
@@ -153,13 +148,13 @@ begin
   select count(*) into n from public.students;
   if n < 1 then raise exception 'RLS FAIL: service_role cannot read students'; end if;
 end $$;
-rollback;
 
 -- ============================================================================
--- Cleanup fixtures
+-- Reset role, then cleanup fixtures (as postgres)
 -- ============================================================================
--- students delete cascades sessions/history/completions/achievements;
--- questions delete cascades options/versions/cases/rubrics.
+reset role;
+reset "request.jwt.claims";
+
 delete from public.students where display_name = '__rls_test__';
 delete from public.questions
 where text in ('__rls_approved__', '__rls_draft__', '__rls_admin_write__',
