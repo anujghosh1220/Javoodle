@@ -144,7 +144,7 @@ export async function getStudentSession(): Promise<StudentSession | null> {
     const { data } = await admin
       .from("student_sessions")
       .select(
-        "id, expires_at, revoked_at, last_seen_at, students!inner(id, display_name)"
+        "id, expires_at, revoked_at, last_seen_at, students(id, display_name)"
       )
       .eq("token_hash", tokenHash)
       .maybeSingle<{
