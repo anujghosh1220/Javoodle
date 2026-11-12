@@ -9,24 +9,31 @@
 - [x] Student dashboard shell (placeholder stats until DB)
 - [ ] Supabase wiring (Phase 2)
 
-## Phase 2 — Database & Admin ✅ implemented (awaiting live Supabase project)
+## Phase 2 — Database & Admin ✅ implemented · 🟡 live-verification in progress
 - [x] `@supabase/ssr` integration: browser/server/admin clients + `lib/env.ts` validation
 - [x] `proxy.ts` session refresh on `/admin/*`
+- [x] `supabase/config.toml` (CLI init, project_id `javoodle`)
 - [x] Migration `0001_init.sql` — full normalized schema + indexes + triggers
+      + pinned `search_path` + column-level answer protection
 - [x] RLS on all 22 tables; anon sees only published/approved content;
       private student data has zero anon access; admin via `app_metadata.role`
-- [x] `supabase/seed.sql` — ICSE topics across 3 phases
+- [x] `supabase/seed.sql` — ICSE topics across 3 phases (idempotent)
+- [x] `supabase/tests/rls_checks.sql` — transaction-scoped role simulation
+      covering anon / non-admin / admin / service_role + answer-column leaks
 - [x] Student session persistence: hashed token (`sha256`), 30-day expiry,
       revocation, `last_seen_at`, find-or-create student by name
 - [x] Cookie-only dev fallback when Supabase env is absent
 - [x] Admin auth: `/admin/login` (Supabase Auth), `requireAdmin()` gate,
       `/admin` dashboard with real counts, logout
 - [x] Dashboard wired to real stats (XP, questions, lessons, syllabus %)
-- [x] `supabase/tests/rls_checks.sql` RLS verification script
 - [x] vitest + 8 unit tests (tokens, expiry, name validation)
-- [ ] **BLOCKED on credentials**: apply migration + seed to a real Supabase
-      project, create admin user, run `rls_checks.sql`, then live-test
-      session persistence / admin login / RLS isolation end-to-end
+- [x] Docs: SUPABASE_SETUP.md, SECURITY_REVIEW.md, TESTING.md, DATABASE.md
+- [x] `.env.local` configured with project keys (gitignored, verified
+      `auth/v1/health` = 200)
+- [ ] **Migration apply**: needs SQL Editor run (Option A) or Supabase
+      login/PAT + DB password (Option B) — see docs/SUPABASE_SETUP.md
+- [ ] **Live tests** (docs/TESTING.md): session persistence, admin login,
+      RLS isolation — blocked until migration is applied
 - [ ] Lesson content (blocks) — Phase 6
 
 ## Phase 3 — Question Studio

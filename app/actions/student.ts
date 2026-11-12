@@ -20,7 +20,14 @@ export async function enterJavoodle(
     return { error: parsed.error.issues[0]?.message ?? "Please check your name." };
   }
 
-  await createStudentSession(parsed.data);
+  try {
+    await createStudentSession(parsed.data);
+  } catch {
+    return {
+      error:
+        "Couldn't reach the learning database. Please try again in a moment.",
+    };
+  }
   redirect("/dashboard");
 }
 

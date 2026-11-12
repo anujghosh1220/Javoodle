@@ -25,4 +25,4 @@ insert into public.topics (name, phase, order_index, description) values
   ('Full Syllabus Revision',                  3, 1,  'Mixed concept drills'),
   ('Previous Year Questions',                 3, 2,  'PYQ practice by topic'),
   ('Timed Practice & Mock Exams',             3, 3,  'Exam simulation & weak-area work')
-on conflict (parent_id, name) do nothing;
+on conflict (name) do nothing;

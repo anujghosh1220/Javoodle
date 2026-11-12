@@ -13,6 +13,7 @@ create extension if not exists "pgcrypto";
 create or replace function public.set_updated_at()
 returns trigger
 language plpgsql
+set search_path = ''
 as $$
 begin
   new.updated_at = now();
@@ -26,6 +27,7 @@ create or replace function public.is_admin()
 returns boolean
 language sql
 stable
+set search_path = ''
 as $$
   select coalesce((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin', false);
 $$;
@@ -76,7 +78,7 @@ create table public.topics (
   description  text,
   created_at   timestamptz not null default now(),
   updated_at   timestamptz not null default now(),
-  unique (parent_id, name)
+  constraint topics_name_unique unique (name)
 );
 
 create trigger topics_set_updated_at
@@ -487,11 +489,30 @@ create policy achievements_admin_all on public.achievements
 
 grant usage on schema public to anon, authenticated, service_role;
 grant all on all tables in schema public to service_role;
-grant select on public.topics, public.lessons, public.questions,
-  public.question_options, public.test_cases, public.exams,
-  public.exam_sections, public.exam_questions, public.achievements
+
+-- Public catalog reads. NOTE: answer-bearing columns are deliberately
+-- excluded — correct_answer_text, explanation, ai_metadata and
+-- question_options.is_correct are only reachable via the service role
+-- (server-side evaluation) or an admin context. RLS alone cannot hide
+-- columns, so this is enforced at the grant level.
+grant select on public.topics, public.lessons, public.test_cases,
+  public.exams, public.exam_sections, public.exam_questions,
+  public.achievements
   to anon, authenticated;
-grant select, insert, update, delete on public.topics, public.lessons,
+
+grant select (
+  id, topic_id, type, text, marks, difficulty,
+  source_document_id, source_page, source_year,
+  status, version, created_at, updated_at
+) on public.questions to anon, authenticated;
+
+grant select (
+  id, question_id, label, text, order_index
+) on public.question_options to anon, authenticated;
+-- Write grants for content management. RLS (is_admin()) decides who may
+-- actually write; the column-limited SELECT above still applies, so even
+-- an authenticated admin reads answer columns via the service role.
+grant insert, update, delete on public.topics, public.lessons,
   public.documents, public.questions, public.question_options,
   public.question_versions, public.test_cases, public.marking_rubrics,
   public.exams, public.exam_sections, public.exam_questions,
