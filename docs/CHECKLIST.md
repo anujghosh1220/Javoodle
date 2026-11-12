@@ -36,13 +36,29 @@
       RLS isolation — blocked until migration is applied
 - [ ] Lesson content (blocks) — Phase 6
 
-## Phase 3 — Question Studio
-- [ ] Document upload → Supabase Storage
-- [ ] PDF/DOCX/image extraction pipeline
-- [ ] Zod-validated JSON import/export
-- [ ] Side-by-side review UI, approve/reject/edit
-- [ ] Question bank: search/filter/duplicate detection
-- [ ] Question versioning on edit
+## Phase 3 — Question Studio ✅ implemented (awaiting migration 0003 + live test)
+- [x] Migration `0003_question_studio.sql` — extraction fields, `answer_status`,
+      `question_review_events`, `question_import_batches`, private storage bucket
+- [x] Extraction service (`lib/extract`): PDF via unpdf (per-page), DOCX via
+      mammoth; images → `needs_manual_review` (no fake OCR)
+- [x] Document upload: drag-drop, multi-file, type/size validation, private
+      `question-documents` bucket, signed-URL preview, delete w/ storage cleanup
+- [x] Extraction workflow: pending→extracting→extracted/failed/manual_review,
+      retry, view text, AI-prompt handoff
+- [x] AI prompt generator + extracted-text copy/download (manual ChatGPT flow)
+- [x] JSON import: Zod schema (7 question types, subquestions, rubric/test-case
+      validation), preview w/ per-field errors, duplicate detection,
+      batch import → `pending_review` + `unverified` answers
+- [x] Review UI `/admin/questions/[id]`: source doc vs extracted side-by-side,
+      independent Q/A approve/reject/revision, edit→version snapshot,
+      audit events, history
+- [x] Question bank: search + filters (type/status/answer/topic/difficulty/year)
+- [x] Question versioning via `question_versions` snapshots on every edit
+- [x] Admin routes all behind `requireAdmin()`; service role only server-side
+- [x] vitest: +7 import-schema/normalize tests (15 total)
+- [ ] **Run `supabase/migrations/0003_question_studio.sql` in SQL Editor**
+- [ ] Live test: upload PDF → extract → prompt → import → review → bank
+- [ ] Exam builder — Phase 4
 
 ## Phase 4 — Exam Engine
 - [ ] Exam builder + section/choice config
