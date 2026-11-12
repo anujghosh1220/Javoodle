@@ -42,3 +42,4 @@ next-env.d.ts
 
 # Devin local config
 .devin/
+.test-token
