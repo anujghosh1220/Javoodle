@@ -1,26 +1,58 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* Javoodle palette — lavender, mint, warm yellow, soft cream */
+  --color-cream-50: #fffdf7;
+  --color-cream-100: #fff8ec;
+  --color-cream-200: #fdf0d5;
+  --color-cream-300: #f7e3b8;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-lav-50: #f3efff;
+  --color-lav-100: #e6dfff;
+  --color-lav-200: #cbbdff;
+  --color-lav-300: #a78bfa;
+  --color-lav-400: #8b5cf6;
+  --color-lav-500: #7c3aed;
+  --color-lav-600: #6d28d9;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-mint-50: #effcf6;
+  --color-mint-100: #d7f7e8;
+  --color-mint-200: #b0eed2;
+  --color-mint-300: #6ee7b7;
+  --color-mint-400: #34d399;
+  --color-mint-500: #10b981;
+  --color-mint-600: #059669;
+
+  --color-sun-50: #fffaeb;
+  --color-sun-100: #fff3c4;
+  --color-sun-200: #ffe588;
+  --color-sun-300: #ffd34d;
+  --color-sun-400: #fbbf24;
+  --color-sun-500: #f59e0b;
+
+  --color-ink-400: #8a86a3;
+  --color-ink-500: #6b6785;
+  --color-ink-600: #4a4763;
+  --color-ink-700: #35324a;
+  --color-ink-800: #262338;
+  --color-ink-900: #1a1728;
+
+  --font-sans: var(--font-quicksand), ui-rounded, "Segoe UI", system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --radius-card: 1.25rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(1200px 600px at 85% -10%, rgba(167, 139, 250, 0.18), transparent 60%),
+    radial-gradient(900px 500px at -10% 30%, rgba(110, 231, 183, 0.16), transparent 55%),
+    radial-gradient(800px 500px at 60% 110%, rgba(255, 211, 77, 0.14), transparent 60%),
+    var(--color-cream-50);
+  color: var(--color-ink-800);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--color-lav-200);
 }
