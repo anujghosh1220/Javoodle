@@ -31,19 +31,26 @@ when these are absent — nothing breaks, but progress won't persist.
 
 1. Dashboard → SQL Editor → New query.
 2. Paste all of `supabase/migrations/0001_init.sql` → Run.
-3. Paste all of `supabase/seed.sql` → Run.
-4. Paste all of `supabase/tests/rls_checks.sql` → Run. Expect **no errors**
+3. Paste all of `supabase/migrations/0002_answer_column_privileges.sql` → Run (required hardening).
+4. Paste all of `supabase/migrations/0003_question_studio.sql` → Run (**Phase 3 Question Studio**: documents/extractions/import/review/audit, independent approvals, RLS/grants, private `question-documents` storage bucket + policies).
+5. Paste all of `supabase/seed.sql` → Run.
+6. Paste all of `supabase/tests/rls_checks.sql` → Run. Expect **no errors**
    (any `RLS FAIL` exception = a policy bug — report it).
 
-All three are idempotent-safe for a fresh DB; on an existing DB the migration
-is NOT idempotent (tables would already exist) — use Option B or drop first.
+All are idempotent-safe for a fresh DB where noted; migrations are additive/versioned (do not rewrite applied migrations). On an existing DB, apply only unapplied migrations in order.
+
+### Storage (Question Studio)
+
+- Migration 0003 creates/ensures private bucket `question-documents` (non-public, 20MB limit, PDF/DOCX/PNG/JPEG) with admin-only storage policies.
+- If bucket/policies were not created (permissions), create bucket `question-documents` as **Private** in Storage and add policies allowing only admin users (`public.is_admin()`) to select/insert/update/delete objects in that bucket.
+- Originals are never public; the app uses signed URLs/authorized server-side retrieval.
 
 ### Option B — Supabase CLI
 
 ```bash
 npm i -g supabase          # or use npx supabase
 supabase login             # browser auth — needs YOUR Supabase account
-supabase link --project-ref agbqgargwfgniivqwwqf   # asks for DB password once
+supabase link --project-ref <ref>   # asks for DB password once
 supabase db push           # applies supabase/migrations/*.sql in order
 psql "$DB_URL" -f supabase/seed.sql   # or paste seed.sql in SQL Editor
 ```

@@ -154,14 +154,15 @@ Untrusted Java must never run on the Next.js server. Options (free-tier):
 Interface: `executeJava(source, stdin, testCases) → { compile, stdout, stderr, testResults }`.
 Time/memory limits enforced by the executor, not our code.
 
-## AI pipeline
+## Question Studio (Phase 3, implemented in code)
 
-- Phase 3 ingests documents (pdf-parse / mammoth for DOCX / tesseract.js for
-  scanned images) → raw text + structure.
-- AI (ChatGPT, manual for now) produces a JSON conforming to
-  `lib/validation/question.schema.ts` (zod) → imported via admin JSON importer.
-- AI proposals are stored with `ai_proposed_*` fields and `verified=false`
-  until admin approves; never auto-published.
+- **Routes (admin-only, server-side guarded):** `/admin/questions` (dashboard), `/admin/questions/upload`, `/admin/documents`, `/admin/questions/import`, `/admin/questions/review`, `/admin/questions/bank`, `/admin/questions/[id]`; APIs `/api/admin/documents/[id]/extraction`, `/api/admin/questions/[id]`.
+- **Storage:** private Supabase bucket `question-documents` (20MB, PDF/DOCX/PNG/JPEG), admin-only policies, safe filenames/paths, signed/authorized retrieval only, delete with storage cleanup.
+- **Extraction abstraction (`lib/extraction`):** PDF via `unpdf` (page text/refs/warnings), DOCX via `mammoth` (text/html/paragraphs/tables signals), images/scanned best-effort → `needs_manual_review` (no OCR invention). Statuses `uploaded|extracting|extracted|extraction_failed|needs_manual_review`; retries, editable extracted text, preserved original refs/page numbers/warnings. Diagrams/tables/scanned/code/unclear content flagged for manual review; extraction never auto-publishes.
+- **AI/manual workflow:** prompt generator includes preservation/provenance/no-invention/source-vs-AI instructions; copy/download prompt and extracted content for manual ChatGPT analysis.
+- **Import:** Zod schemas (`lib/questions/schema.ts`) for `mcq|fill_blank|true_false|output_prediction|find_error|theory|coding`, subquestions/groups/provenance; paste/upload JSON, validate before import, preview, exact question+field errors, unsupported/extra retained in `extra`, normalized/similarity duplicate candidates (compare-only), transactional batch import to `pending_review` + `unverified`.
+- **Review & approvals:** side-by-side source vs editable fields; independent `question_status` and `answer_status` transitions, edits/flags, audit events; approved questions enter bank, but questions with unverified answers must never be used for auto-marked exams.
+- **Bank/versioning:** search/filter, edit/view/history, duplicate comparison, export JSON, delete with confirmation. Edits create immutable `question_versions` snapshots + `question_review_events`; historical exam content remains unchanged.
 
 ## Design system
 

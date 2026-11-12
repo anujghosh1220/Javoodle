@@ -1,6 +1,6 @@
-# Javoodle — Implementation Checklist
+﻿# Javoodle — Implementation Checklist
 
-## Phase 1 — Foundation ✅ in progress
+## Phase 1 — Foundation ✅ implemented (locally verified)
 - [x] Next.js 16 + TS strict + Tailwind scaffold
 - [x] Design tokens + reusable UI primitives
 - [x] Original SVG mascot
@@ -9,56 +9,26 @@
 - [x] Student dashboard shell (placeholder stats until DB)
 - [ ] Supabase wiring (Phase 2)
 
-## Phase 2 — Database & Admin ✅ implemented · 🟡 live-verification in progress
-- [x] `@supabase/ssr` integration: browser/server/admin clients + `lib/env.ts` validation
-- [x] `proxy.ts` session refresh on `/admin/*`
-- [x] `supabase/config.toml` (CLI init, project_id `javoodle`)
-- [x] Migration `0001_init.sql` — full normalized schema + indexes + triggers
-      + pinned `search_path` + column-level answer protection
-- [x] RLS on all 22 tables; anon sees only published/approved content;
-      private student data has zero anon access; admin via `app_metadata.role`
-- [x] `supabase/seed.sql` — ICSE topics across 3 phases (idempotent)
-- [x] `supabase/tests/rls_checks.sql` — transaction-scoped role simulation
-      covering anon / non-admin / admin / service_role + answer-column leaks
-- [x] Student session persistence: hashed token (`sha256`), 30-day expiry,
-      revocation, `last_seen_at`, find-or-create student by name
-- [x] Cookie-only dev fallback when Supabase env is absent
-- [x] Admin auth: `/admin/login` (Supabase Auth), `requireAdmin()` gate,
-      `/admin` dashboard with real counts, logout
-- [x] Dashboard wired to real stats (XP, questions, lessons, syllabus %)
-- [x] vitest + 8 unit tests (tokens, expiry, name validation)
-- [x] Docs: SUPABASE_SETUP.md, SECURITY_REVIEW.md, TESTING.md, DATABASE.md
-- [x] `.env.local` configured with project keys (gitignored, verified
-      `auth/v1/health` = 200)
-- [ ] **Migration apply**: needs SQL Editor run (Option A) or Supabase
-      login/PAT + DB password (Option B) — see docs/SUPABASE_SETUP.md
-- [ ] **Live tests** (docs/TESTING.md): session persistence, admin login,
-      RLS isolation — blocked until migration is applied
-- [ ] Lesson content (blocks) — Phase 6
+## Phase 2 — Database & Admin
+- **Locally verified (code):** `@supabase/ssr` integration (browser/server/admin clients + `lib/env.ts`), `proxy.ts` refresh on `/admin/*`, migrations `0001_init.sql`/`0002_answer_column_privileges.sql`, RLS/policies/grants + answer-column protection, `supabase/seed.sql`, RLS checks script, student session persistence (hashed token, expiry, revocation, `last_seen_at`, find-or-create), cookie-only dev fallback, admin auth `/admin/login` + `requireAdmin()` + `/admin` dashboard, dashboard real-stats wiring, vitest unit tests, docs (SUPABASE_SETUP/SECURITY_REVIEW/TESTING/DATABASE).
+- **Supabase-applied (pending):** apply `0001_init.sql`, `0002_answer_column_privileges.sql`, `seed.sql` in target project (SQL Editor/CLI) — not executed here.
+- **Live E2E verified (pending):** `supabase/tests/rls_checks.sql` run in SQL Editor, session persistence/recovery, admin login/logout/role enforcement, RLS isolation against live data — blocked until migrations applied.
 
-## Phase 3 — Question Studio ✅ implemented (awaiting migration 0003 + live test)
-- [x] Migration `0003_question_studio.sql` — extraction fields, `answer_status`,
-      `question_review_events`, `question_import_batches`, private storage bucket
-- [x] Extraction service (`lib/extract`): PDF via unpdf (per-page), DOCX via
-      mammoth; images → `needs_manual_review` (no fake OCR)
-- [x] Document upload: drag-drop, multi-file, type/size validation, private
-      `question-documents` bucket, signed-URL preview, delete w/ storage cleanup
-- [x] Extraction workflow: pending→extracting→extracted/failed/manual_review,
-      retry, view text, AI-prompt handoff
-- [x] AI prompt generator + extracted-text copy/download (manual ChatGPT flow)
-- [x] JSON import: Zod schema (7 question types, subquestions, rubric/test-case
-      validation), preview w/ per-field errors, duplicate detection,
-      batch import → `pending_review` + `unverified` answers
-- [x] Review UI `/admin/questions/[id]`: source doc vs extracted side-by-side,
-      independent Q/A approve/reject/revision, edit→version snapshot,
-      audit events, history
-- [x] Question bank: search + filters (type/status/answer/topic/difficulty/year)
-- [x] Question versioning via `question_versions` snapshots on every edit
-- [x] Admin routes all behind `requireAdmin()`; service role only server-side
-- [x] vitest: +7 import-schema/normalize tests (15 total)
-- [ ] **Run `supabase/migrations/0003_question_studio.sql` in SQL Editor**
-- [ ] Live test: upload PDF → extract → prompt → import → review → bank
-- [ ] Exam builder — Phase 4
+## Phase 3 — Question Studio
+- **Locally verified (code, lint/build/tests executed):**
+  - [x] `supabase/migrations/0003_question_studio.sql` (additive, not rewriting applied migrations): document/extraction/import/audit tables, independent `question_status`/`answer_status` + legacy-status backfill/sync trigger, provenance/subquestion/group fields, RLS/grants/column protections, private `question-documents` bucket + admin-only Storage policies.
+  - [x] Admin routes (all server-side `requireAdmin()` guarded, panel layout gated): `/admin/questions` (dashboard, real Supabase-driven counts/activity), `/admin/questions/upload`, `/admin/documents`, `/admin/questions/import`, `/admin/questions/review`, `/admin/questions/bank`, `/admin/questions/[id]`; APIs `/api/admin/questions/[id]`, `/api/admin/documents/[id]/extraction`.
+  - [x] Document upload/management: private Supabase Storage (`question-documents`), PDF/DOCX/PNG/JPG, drag-drop/multi/progress, type/size validation (20MB), safe filenames/paths, metadata (source year/type/description), signed/authorized server-side retrieval (no public URLs), delete with storage cleanup.
+  - [x] Extraction abstraction (`lib/extraction`): PDF `unpdf`, DOCX `mammoth`, image/scanned best-effort → `needs_manual_review` (no OCR invention). Statuses `uploaded|extracting|extracted|extraction_failed|needs_manual_review`, attempt history, retries, editable extracted text, preserved original refs/page numbers/warnings/structured refs; diagrams/tables/scanned/unclear flagged; extraction never auto-publishes.
+  - [x] AI/manual workflow: prompt generator (preserve wording/marks/numbering/topics/difficulty, provenance, no-invention, source-derived vs AI-generated) with copy/download prompt and extracted content.
+  - [x] JSON import (`lib/questions/schema.ts` Zod): paste/upload, validate before import with exact question/field errors, preview, duplicate candidates (normalized/similarity, compare-only), transactional batch import as `pending_review` + `unverified`; types `mcq|fill_blank|true_false|output_prediction|find_error|theory|coding`, subquestions/groups/provenance, unsupported/extra retained.
+  - [x] Review UI: side-by-side source vs editable fields, independent question/answer approve/reject/edit/needs-revision/unverified, flag/manual review, replacement via import flow; audit events recorded.
+  - [x] Question bank: search/filter (topic/type/difficulty/year/source/statuses/marks/text), view/edit, version history & audit trail, delete with confirmation, duplicate comparison, export selected JSON.
+  - [x] Versioning/audit: edits and review changes create immutable `question_versions` snapshots and `question_review_events` (actor/reason/timestamps/before-after/versions); historical exam snapshots remain immutable by design.
+  - [x] Security hardening (code): all admin actions/APIs/pages guarded server-side; service-role only after admin auth; no student-facing reads of pending/answers/explanations/model solutions/rubrics/hidden tests/private AI metadata (RLS + column grants); private storage/signed access.
+  - [x] Automated tests (local, no live creds): `tests/question-studio.test.ts` (import validation incl. all types, nested subquestions, MCQ/options, marks, exact field errors, extra-field preservation) and `tests/question-studio-utils.test.ts` (storage sanitization/kinds/paths/limits, prompt generation invariants). Lint/build/tests executed locally.
+- **Supabase-applied (pending):** apply `0003_question_studio.sql` in Supabase project; ensure private bucket `question-documents` (20MB, PDF/DOCX/PNG/JPEG, admin-only policies) exists if not auto-created.
+- **Live E2E verified (pending):** run `supabase/tests/rls_checks.sql` (incl. studio isolation/answer-column checks) in SQL Editor; verify upload→extract→retry→edit→delete+storage cleanup, signed/private access, prompt/export, ChatGPT JSON import (valid/invalid/duplicates/batch), side-by-side review, independent approvals (all combinations), bank search/filter/edit/history/export, version/audit persistence, and RLS/authorization against live Supabase/Storage.
 
 ## Phase 4 — Exam Engine
 - [ ] Exam builder + section/choice config

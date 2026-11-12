@@ -60,15 +60,27 @@ RLS verification script: `supabase/tests/rls_checks.sql`.
 
 ## Question studio
 
-- `questions(id, topic_id, type mcq|fib|truefalse|output|error|theory|program,
-  text, marks, difficulty 1-5, source_document_id, source_page, source_year,
-  status draft|pending|approved|rejected, version, ai_metadata jsonb,
-  correct_answer_text, explanation)`
+### Core tables (0001/0002, preserved)
+- `questions(id, topic_id, type, text, marks, difficulty, source_document_id, source_page, source_year, status, version, ai_metadata, correct_answer_text, explanation, ...)` — legacy `status` kept for compatibility.
 - `question_options(question_id, label, text, is_correct, order_index)`
-- `question_versions(question_id, version, snapshot jsonb)` — UNIQUE
-  (question_id, version); frozen copies so exam attempts never change.
+- `question_versions(question_id, version, snapshot jsonb)` — immutable snapshots for exam integrity/history.
 - `test_cases(question_id, input, expected_output, is_hidden, order_index)`
 - `marking_rubrics(question_id, criteria, max_marks, keywords jsonb)`
+- `documents(...)` — source files in private Supabase Storage.
+
+### Phase 3 extensions (`0003_question_studio.sql`, additive/backward-compatible)
+- **`documents`** extended: `original_filename`, `file_size`, `storage_bucket` (`question-documents`), `uploaded_by`, `source_year`, `source_type` (`previous_year_paper|specimen_paper|school_paper|notes|marking_scheme|other`), `description`, `extraction_error`, `extracted_at`, `metadata`; lifecycle/status aligned to `uploaded|extracting|extracted|extraction_failed|needs_manual_review` (+ legacy values retained).
+- **`document_extractions`**: attempt history per document (`status`, `extractor`, `extracted_text`, `structured` pages/refs, `page_count`, `warnings`, `needs_manual_review`, `error_message`, actor/timestamps).
+- **`question_import_batches`**: raw payload, hash, source document, filename, actor, summary/counts/errors/duplicates, status.
+- **`question_review_events`**: audit trail (actor, action/field/reason, from/to question & answer statuses, previous/new version, previous/new snapshots, metadata, timestamps).
+- **`questions`** extended (independent approvals & studio fields):
+  - Types include `mcq|fill_blank|true_false|output_prediction|find_error|theory|coding` (+ legacy aliases retained).
+  - `question_status` (`pending_review|approved|rejected|needs_revision`, default `pending_review`) and `answer_status` (`unverified|approved|rejected|needs_revision`, default `unverified`) — **independent**.
+  - Backfill: legacy `status` → `question_status` (`approved/rejected` preserved, others → `pending_review`), `answer_status` set to `unverified` conservatively; `provenance` records legacy migration. Existing answer fields preserved.
+  - Trigger keeps legacy `status` in sync from `question_status` for compatibility.
+  - Added: `parent_question_id`, `order_index`, `group_key` (subquestions/groups), `source_question_number`, `proposed_answer`, `model_answer`, `reference_solution`, `marking_rubric` (jsonb), `provenance`, `import_batch_id`, `extra` (unsupported/extra preserved), topic/source links.
+- **Storage**: private bucket `question-documents` (non-public, 20MB limit, allowed PDF/DOCX/PNG/JPEG) with admin-only storage policies; documents accessed via signed URLs/server-side retrieval only.
+- **Versioning**: edits/review changes create new `question_versions` snapshots and `question_review_events`; exam attempts must continue to use frozen snapshots (historical content never mutated).
 
 ## Exams & attempts
 

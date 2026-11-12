@@ -46,10 +46,17 @@
 
 - Self-host or next/font Google fonts (build-time fetch; fine on Vercel).
 
+## Question Studio (Phase 3) constraints
+
+- **Storage:** private Supabase Storage bucket `question-documents` (no Vercel filesystem persistence). Free-tier storage/egress applies; 20MB per-file limit configured (adjustable within plan limits).
+- **Extraction:** runs in server context using free libraries (`unpdf`, `mammoth`). Large/scanned PDFs and images may be partial/unreadable—image OCR is best-effort/manual-review in this implementation (no paid OCR/API). Statuses/retries and manual edit of extracted text are provided; never invent content.
+- **AI:** manual ChatGPT workflow only (prompt + extracted content export/copy). No paid AI API dependency.
+- **DB:** additive schema (migrations/import batches/audit/versions/snapshots) fits single-student/question-bank scale; monitor free-tier 500MB DB/storage quotas.
+- **Security/ops:** signed URLs for private originals; service-role used only after server-side admin auth; RLS/column grants block student access to answers/rubrics/hidden tests/pending studio data.
+
 ## Summary of hard limits to design around
 
 1. No JVM on Vercel → external executor (Piston) behind interface. ✅ planned
-2. No local file storage → Supabase Storage for documents. ✅
-3. Serverless timeouts → keep extraction/execution async-friendly with status
-   polling for long jobs. ✅
-4. Free DB size → fine for one student + question bank (thousands of rows).
+2. No local file storage → Supabase Storage for documents. ✅ implemented for Question Studio
+3. Serverless timeouts → keep extraction/execution async-friendly with status tracking/retry/manual review. ✅
+4. Free DB size → fine for one student + question bank (thousands of rows). ✅
