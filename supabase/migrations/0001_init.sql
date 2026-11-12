@@ -500,6 +500,13 @@ grant select on public.topics, public.lessons, public.test_cases,
   public.achievements
   to anon, authenticated;
 
+-- Supabase cloud auto-grants table-level SELECT on new public tables to
+-- anon/authenticated (auto_expose_new_tables). Column privileges cannot
+-- subtract from a table-level grant, so the table-level SELECT on the two
+-- answer-bearing tables must be revoked before column grants apply.
+revoke select on public.questions from anon, authenticated;
+revoke select on public.question_options from anon, authenticated;
+
 grant select (
   id, topic_id, type, text, marks, difficulty,
   source_document_id, source_page, source_year,

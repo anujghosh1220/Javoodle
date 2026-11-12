@@ -1,8 +1,15 @@
 # Javoodle — Database Schema
 
-**Status: IMPLEMENTED** in `supabase/migrations/0001_init.sql`.
-Seed data (syllabus topics) in `supabase/seed.sql`.
+**Status: IMPLEMENTED** in `supabase/migrations/0001_init.sql` (+ `0002` privilege
+fix). Seed data (syllabus topics) in `supabase/seed.sql`.
 RLS verification script: `supabase/tests/rls_checks.sql`.
+
+> **Migration notes**
+> - `0001_init.sql` — full schema. Fresh installs: run 0001 then seed.
+> - `0002_answer_column_privileges.sql` — required on any DB that ran 0001
+>   before the column-grant hardening (Supabase auto-grants table-level
+>   SELECT, which overrides column grants). Run it once, then re-run
+>   `rls_checks.sql`.
 
 ## Setup instructions
 
