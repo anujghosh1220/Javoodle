@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { requireAdmin } from "@/lib/admin/auth";
 
 // Server-side authorization gate for every admin sub-page.
@@ -9,6 +10,7 @@ export default async function AdminPanelLayout({
 }: {
   children: React.ReactNode;
 }) {
+  await connection();
   await requireAdmin();
   return <>{children}</>;
 }

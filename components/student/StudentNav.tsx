@@ -2,23 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  LayoutDashboard,
-  BookOpen,
-  Brain,
-  Code2,
-  ClipboardList,
-  TrendingUp,
-} from "lucide-react";
+import { ClipboardList, Code2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const items = [
-  { href: "/dashboard", label: "Home", icon: LayoutDashboard },
-  { href: "/learn", label: "Learn", icon: BookOpen },
-  { href: "/practice", label: "Practice", icon: Brain },
-  { href: "/playground", label: "Playground", icon: Code2 },
   { href: "/exams", label: "Exams", icon: ClipboardList },
-  { href: "/growth", label: "Growth", icon: TrendingUp },
+  { href: "/coding", label: "Coding Lab", icon: Code2 },
 ];
 
 export function StudentNav() {
@@ -38,10 +27,7 @@ export function StudentNav() {
 
         <ul className="flex items-center gap-1 overflow-x-auto">
           {items.map((item) => {
-            const active =
-              item.href === "/dashboard"
-                ? pathname === "/dashboard"
-                : pathname.startsWith(item.href);
+            const active = pathname.startsWith(item.href);
             return (
               <li key={item.href} className="shrink-0">
                 <Link

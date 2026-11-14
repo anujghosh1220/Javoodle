@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { StudentNav } from "@/components/student/StudentNav";
 import { getStudentSession } from "@/lib/student/session";
@@ -10,6 +11,7 @@ export default async function StudentLayout({
 }: {
   children: React.ReactNode;
 }) {
+  await connection();
   const session = await getStudentSession();
   if (!session) redirect("/");
 

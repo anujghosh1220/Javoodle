@@ -128,3 +128,27 @@ history/xp/attempts by `student_id` (+ `created_at desc`), completions by
 `student_id`, unique constraints on `(question_id, version)` snapshots,
 `(attempt_id, question_id)` answers, `(student_id, lesson_id)` completions,
 `(student_id, achievement_id)` badges, `achievements.code`.
+
+## Phase 4 — Online examination tables (0004_online_exams.sql)
+
+- `exams` extended: `subject`, `class_name`, `description`, `instructions`,
+  `paper_document_id → documents(id)` (private bucket PDF),
+  `reading_time_minutes`, `passing_marks`, `release_model_answers`.
+- `exam_paper_questions(exam_id, section_id → exam_sections, question_number,
+  prompt, question_type theory|program|output|mcq|short_answer|other, marks,
+  options jsonb, model_answer, order_index)` — admin-defined markable
+  structure; one row = one evaluated unit (sub-questions are rows like `3(a)`).
+- `exam_attempts` extended: `deadline_at`, `exam_snapshot jsonb` (frozen
+  sections+questions+marks at start), mark/percentage snapshots,
+  `evaluated_at`, `published_at`; status widened to
+  `in_progress|submitted|under_evaluation|evaluation_completed|result_published|evaluated`;
+  UNIQUE `(exam_id, student_id)` — one attempt per student per exam.
+- `exam_answers(attempt_id, paper_question_id, answer_text, mcq_option,
+  saved_at)` UNIQUE `(attempt_id, paper_question_id)` — autosaved answers.
+- `exam_evaluations(attempt_id, paper_question_id, marks_awarded ≥ 0,
+  feedback, evaluated_by, evaluated_at)` UNIQUE `(attempt_id, paper_question_id)`.
+- Access: new tables have RLS enabled, admin-only policies, and NO
+  anon/authenticated grants — every read/write goes through the service role
+  after `requireAdmin()` or student-session validation. Question paper PDFs
+  use the private `question-documents` bucket with short-lived signed URLs
+  (admin preview 15 min, student exam 4 h, only with an active attempt).

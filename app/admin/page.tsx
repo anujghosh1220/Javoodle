@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { connection } from "next/server";
 import {
   FileText,
   HelpCircle,
@@ -22,6 +23,9 @@ export const metadata: Metadata = { title: "Admin dashboard" };
 export const instant = false;
 
 export default async function AdminDashboardPage() {
+  // Request-time rendering: auth/session code reads the clock (JWT expiry
+  // checks), which is unstable during prerendering under Cache Components.
+  await connection();
   const { user } = await requireAdmin();
 
   const canQuery = isSupabaseConfigured() && hasServiceRoleKey();
@@ -81,14 +85,34 @@ export default async function AdminDashboardPage() {
             Question Studio, exam builder and analytics arrive in the next phases.
           </p>
         </div>
-        <form action={adminLogout}>
-          <button
-            type="submit"
-            className="flex items-center gap-2 rounded-full border-2 border-cream-300 bg-white px-4 py-2 text-sm font-bold text-ink-500 transition-colors hover:border-red-300 hover:text-red-500"
+        <div className="flex flex-wrap items-center gap-3">
+          <Link
+            href="/admin/exams"
+            className="rounded-full bg-lav-400 px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-lav-300"
           >
-            <LogOut className="h-4 w-4" /> Sign out
-          </button>
-        </form>
+            Exam management →
+          </Link>
+          <Link
+            href="/admin/questions"
+            className="rounded-full border-2 border-cream-300 bg-white px-4 py-2 text-sm font-bold text-ink-500 transition-colors hover:border-lav-300"
+          >
+            Question Studio →
+          </Link>
+          <Link
+            href="/admin/coding"
+            className="rounded-full border-2 border-cream-300 bg-white px-4 py-2 text-sm font-bold text-ink-500 transition-colors hover:border-mint-300 hover:text-mint-600"
+          >
+            Coding Lab →
+          </Link>
+          <form action={adminLogout}>
+            <button
+              type="submit"
+              className="flex items-center gap-2 rounded-full border-2 border-cream-300 bg-white px-4 py-2 text-sm font-bold text-ink-500 transition-colors hover:border-red-300 hover:text-red-500"
+            >
+              <LogOut className="h-4 w-4" /> Sign out
+            </button>
+          </form>
+        </div>
       </header>
 
       {stats ? (

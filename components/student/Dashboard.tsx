@@ -2,154 +2,96 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  BookOpen,
-  Brain,
-  Code2,
-  ClipboardList,
-  Sparkles,
-  Flame,
-  Target,
-  TrendingUp,
-  LogOut,
-} from "lucide-react";
+import { Code2, ClipboardList, ArrowRight, LogOut, User } from "lucide-react";
 import { Robot } from "@/components/mascot/Robot";
 import { Card } from "@/components/ui/Card";
-import { Chip } from "@/components/ui/Chip";
-import { ProgressBar } from "@/components/ui/ProgressBar";
-import { EmptyState } from "@/components/ui/EmptyState";
 import { leaveJavoodle } from "@/app/actions/student";
-import type { DashboardStats } from "@/lib/student/stats";
 
-const quickLinks = [
-  { href: "/learn", title: "Today's lesson", desc: "Fresh Java concepts, gently explained", icon: BookOpen, tone: "bg-lav-100 text-lav-500" },
-  { href: "/practice", title: "Warm-up practice", desc: "MCQs, outputs & theory drills", icon: Brain, tone: "bg-mint-100 text-mint-600" },
-  { href: "/playground", title: "Code playground", desc: "Write, run & break Java safely", icon: Code2, tone: "bg-sun-100 text-sun-500" },
-  { href: "/exams", title: "Mock exams", desc: "Real ICSE-format 100-mark papers", icon: ClipboardList, tone: "bg-lav-100 text-lav-500" },
-];
-
-const container = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.08 } },
-};
+const container = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } };
 const item = {
   hidden: { opacity: 0, y: 16 },
   show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" as const } },
 };
 
-export function Dashboard({
-  name,
-  stats,
-}: {
-  name: string;
-  stats: DashboardStats;
-}) {
+export function Dashboard({ name }: { name: string }) {
   const hour = new Date().getHours();
-  const greeting =
-    hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+  const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
   return (
     <motion.div
       variants={container}
       initial="hidden"
       animate="show"
-      className="flex flex-col gap-6"
+      className="mx-auto flex min-h-[70vh] w-full max-w-2xl flex-col items-center justify-center gap-8 py-8"
     >
-      {/* Hero */}
-      <motion.section variants={item} className="flex items-center justify-between gap-4">
-        <div className="space-y-1">
-          <Chip tone="mint">
-            <Flame className="h-3.5 w-3.5" /> Level 1 · Seedling Coder
-          </Chip>
-          <h1 className="text-3xl font-extrabold text-ink-800 sm:text-4xl">
-            {greeting}, {name}! 👋
+      {/* Welcome */}
+      <motion.section variants={item} className="flex flex-col items-center gap-4 text-center">
+        <motion.div
+          initial={{ rotate: -12, opacity: 0 }}
+          animate={{ rotate: 0, opacity: 1 }}
+          transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+        >
+          <Robot mood="happy" size={120} />
+        </motion.div>
+        <div>
+          <h1 className="text-4xl font-extrabold tracking-tight text-ink-800 sm:text-5xl">
+            Hey, {name}! 👋
           </h1>
-          <p className="text-ink-400 font-semibold">
-            Your Java adventure starts right here. One small step at a time.
+          <p className="mt-2 text-lg font-semibold text-ink-400">
+            {greeting} — ready for another little Java adventure?
           </p>
         </div>
-        <Robot mood="happy" size={96} className="hidden sm:block" />
       </motion.section>
 
-      {/* Stats row */}
-      <motion.section variants={item} className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {[
-          { label: "XP earned", value: String(stats.xp), icon: Sparkles, tone: "text-lav-500" },
-          { label: "Questions solved", value: String(stats.questionsSolved), icon: Target, tone: "text-mint-500" },
-          { label: "Lessons done", value: String(stats.lessonsCompleted), icon: BookOpen, tone: "text-sun-500" },
-          { label: "Syllabus", value: `${stats.syllabusPercent}%`, icon: TrendingUp, tone: "text-lav-500" },
-        ].map((s) => (
-          <Card key={s.label} className="flex flex-col gap-1 p-4">
-            <s.icon className={`h-5 w-5 ${s.tone}`} />
-            <span className="text-2xl font-extrabold text-ink-800">{s.value}</span>
-            <span className="text-xs font-bold text-ink-400">{s.label}</span>
-          </Card>
-        ))}
-      </motion.section>
-
-      <motion.section variants={item} className="grid gap-4 lg:grid-cols-3">
-        {/* Daily mission */}
-        <Card className="flex flex-col gap-3 border-lav-200 bg-gradient-to-br from-lav-50 to-white p-5 lg:col-span-1">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-lav-500" />
-            <h2 className="font-extrabold text-ink-700">Daily mission</h2>
-          </div>
-          <p className="text-sm font-semibold text-ink-500">
-            Complete your first lesson to earn 50 XP and meet your robot friend.
-          </p>
-          <ProgressBar value={stats.syllabusPercent} />
-          <Link
-            href="/learn"
-            className="mt-auto inline-flex w-fit items-center rounded-full bg-lav-400 px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-lav-300"
-          >
-            Start learning
+      {/* Two activity cards */}
+      <motion.section variants={item} className="grid w-full gap-4 sm:grid-cols-2">
+        <motion.div whileHover={{ y: -6, scale: 1.02 }} transition={{ type: "spring", stiffness: 250 }}>
+          <Link href="/exams" className="block h-full">
+            <Card className="flex h-full flex-col items-center gap-3 border-lav-200 bg-gradient-to-br from-lav-50 to-white p-8 text-center">
+              <span className="flex h-16 w-16 items-center justify-center rounded-3xl bg-lav-100">
+                <ClipboardList className="h-8 w-8 text-lav-500" />
+              </span>
+              <h2 className="text-2xl font-extrabold text-ink-800">Exam Zone</h2>
+              <p className="text-sm font-semibold text-ink-500">Practice for your ICSE exams and take mock tests.</p>
+              <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-lav-400 px-5 py-2 text-sm font-extrabold text-white transition-transform group-hover:gap-2.5">
+                Explore Exams <ArrowRight className="h-4 w-4" />
+              </span>
+            </Card>
           </Link>
-        </Card>
+        </motion.div>
 
-        {/* Quick links */}
-        <div className="grid gap-3 sm:grid-cols-2 lg:col-span-2">
-          {quickLinks.map((q) => (
-            <Link key={q.href} href={q.href} className="group">
-              <Card className="flex h-full items-start gap-3 p-4 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:border-lav-300 group-hover:shadow-lg">
-                <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${q.tone}`}>
-                  <q.icon className="h-5 w-5" />
-                </span>
-                <span>
-                  <span className="block font-extrabold text-ink-700">{q.title}</span>
-                  <span className="block text-xs font-semibold text-ink-400">{q.desc}</span>
-                </span>
-              </Card>
-            </Link>
-          ))}
-        </div>
+        <motion.div whileHover={{ y: -6, scale: 1.02 }} transition={{ type: "spring", stiffness: 250 }}>
+          <Link href="/coding" className="block h-full">
+            <Card className="flex h-full flex-col items-center gap-3 border-mint-200 bg-gradient-to-br from-mint-50 to-white p-8 text-center">
+              <span className="flex h-16 w-16 items-center justify-center rounded-3xl bg-mint-100">
+                <Code2 className="h-8 w-8 text-mint-600" />
+              </span>
+              <h2 className="text-2xl font-extrabold text-ink-800">Coding Lab</h2>
+              <p className="text-sm font-semibold text-ink-500">Write Java, solve fun challenges and learn by doing.</p>
+              <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-mint-500 px-5 py-2 text-sm font-extrabold text-white">
+                Start Coding <ArrowRight className="h-4 w-4" />
+              </span>
+            </Card>
+          </Link>
+        </motion.div>
       </motion.section>
 
-      {/* Recent activity + sign out */}
-      <motion.section variants={item} className="grid gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <EmptyState
-            title="No activity yet"
-            description="Every lesson, quiz and exam you complete will show up here. Your story starts today!"
-          />
-        </div>
-        <Card className="flex flex-col gap-3 p-5">
-          <h2 className="font-extrabold text-ink-700">Achievements</h2>
-          <p className="text-sm font-semibold text-ink-400">
-            Earn badges for consistency, courage and clever code. They&apos;ll sparkle
-            here as you grow.
-          </p>
-          <div className="mt-auto pt-2">
+      {/* Footer */}
+      <motion.footer variants={item} className="flex flex-col items-center gap-3">
+        <p className="text-sm font-bold text-ink-400">One line of code at a time. You&apos;ve got this! 💜</p>
+        <details className="group relative">
+          <summary className="flex cursor-pointer list-none items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold text-ink-400 transition-colors hover:bg-cream-100 hover:text-ink-600 [&::-webkit-details-marker]:hidden">
+            <User className="h-3.5 w-3.5" /> Account
+          </summary>
+          <div className="absolute bottom-full left-1/2 mb-2 w-44 -translate-x-1/2 rounded-2xl border border-cream-200 bg-white p-2 shadow-lg">
             <form action={leaveJavoodle}>
-              <button
-                type="submit"
-                className="flex items-center gap-2 text-sm font-bold text-ink-400 transition-colors hover:text-red-500"
-              >
+              <button type="submit" className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold text-ink-500 transition-colors hover:bg-red-50 hover:text-red-500">
                 <LogOut className="h-4 w-4" /> Switch learner
               </button>
             </form>
           </div>
-        </Card>
-      </motion.section>
+        </details>
+      </motion.footer>
     </motion.div>
   );
 }
