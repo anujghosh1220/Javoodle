@@ -90,9 +90,9 @@ export function CodingWorkspace({ question, priorSubmissions }: { question: Q; p
         ))}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid items-stretch gap-5 lg:grid-cols-[minmax(0,45fr)_minmax(0,55fr)]">
         {/* LEFT — question */}
-        <Card className={`flex-col gap-4 p-5 ${tab === "question" ? "flex" : "hidden lg:flex"}`}>
+        <Card className={`flex-col gap-4 overflow-y-auto p-5 lg:max-h-[calc(100dvh-160px)] ${tab === "question" ? "flex" : "hidden lg:flex"}`}>
           <div className="flex flex-wrap items-center gap-2">
             <Chip tone="lav">{question.title}</Chip>
             <Chip tone={question.difficulty === "easy" ? "mint" : question.difficulty === "hard" ? "lav" : "sun"}>{DIFFICULTY_LABELS[question.difficulty]}</Chip>
@@ -141,7 +141,7 @@ export function CodingWorkspace({ question, priorSubmissions }: { question: Q; p
                 <Button size="sm" variant="ghost" onClick={() => { if (window.confirm("Clear the editor?")) setCode(""); }} className="text-red-500" title="Clear"><Trash2 className="h-4 w-4" /></Button>
               </div>
             </div>
-            <div className="h-[320px]">
+            <div className="h-[420px] lg:h-[min(560px,calc(100dvh-280px))]">
               <Editor height="100%" language="java" theme="vs-dark" value={code} onChange={(v) => setCode(v ?? "")} options={{ minimap: { enabled: false }, fontSize: 14, automaticLayout: true, tabSize: 4, insertSpaces: true }} />
             </div>
           </Card>

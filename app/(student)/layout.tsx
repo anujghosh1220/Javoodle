@@ -1,6 +1,7 @@
 import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { StudentNav } from "@/components/student/StudentNav";
+import { StudentMain } from "@/components/student/StudentMain";
 import { getStudentSession } from "@/lib/student/session";
 
 // Reads the student session cookie — cannot be prerendered (Cache Components).
@@ -18,9 +19,7 @@ export default async function StudentLayout({
   return (
     <div className="flex min-h-full flex-1 flex-col">
       <StudentNav />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 pb-24 sm:px-6">
-        {children}
-      </main>
+      <StudentMain>{children}</StudentMain>
     </div>
   );
 }
