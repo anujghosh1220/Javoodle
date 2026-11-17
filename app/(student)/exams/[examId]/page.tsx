@@ -23,15 +23,13 @@ export default async function ExamDetailPage({
   const session = await getStudentSession();
   if (!session) redirect("/");
 
-  const detail = session.studentId
-    ? await getExamForStudent(examId, session.studentId)
-    : null;
+  const [detail, ref] = session.studentId
+    ? await Promise.all([
+        getExamForStudent(examId, session.studentId),
+        getAttemptRefForStudent(examId, session.studentId),
+      ])
+    : [null, null];
   if (!detail) {
-    // The exam may be unpublished/closed — but a published result must stay
-    // reachable, so fall back to the student's own attempt.
-    const ref = session.studentId
-      ? await getAttemptRefForStudent(examId, session.studentId)
-      : null;
     if (ref && (ref.status === "result_published" || ref.status === "evaluated")) {
       redirect(`/exams/${examId}/result`);
     }

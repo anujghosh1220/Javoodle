@@ -108,7 +108,7 @@ export function ExamDetailActions({
               const members = selection!.questions.filter((q) => q.optional_group_id === g.id);
               const chosen = picked[g.id]?.size ?? 0;
               return (
-                <div key={g.id} className="rounded-xl bg-white p-3">
+                <div key={g.id} className="rounded-xl bg-cream-200 p-3">
                   <p className="text-sm font-extrabold text-ink-700">
                     {g.title}{" "}
                     <span className="font-bold text-ink-400">

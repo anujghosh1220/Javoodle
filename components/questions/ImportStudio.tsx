@@ -87,7 +87,7 @@ export function ImportStudio({ documents }: { documents: any[] }) {
         <Card className="flex flex-col gap-3 p-4">
           <h2 className="font-extrabold text-ink-800">2. Paste or upload JSON</h2>
           <div className="flex flex-wrap items-center gap-2">
-            <label className="inline-flex cursor-pointer items-center rounded-full border-2 border-cream-300 bg-white px-4 py-2 text-sm font-bold text-ink-700">
+            <label className="inline-flex cursor-pointer items-center rounded-full border-2 border-cream-300 bg-cream-200 px-4 py-2 text-sm font-bold text-ink-700">
               <input type="file" accept="application/json,.json" className="hidden" onChange={onJsonFile} /> Upload JSON file
             </label>
             <Chip tone="ink">{jsonText ? `${jsonText.length} chars` : "No JSON loaded"}</Chip>
@@ -115,8 +115,8 @@ export function ImportStudio({ documents }: { documents: any[] }) {
                 <Chip tone="ink">Duplicates: {(validation.duplicates||[]).length}</Chip>
               </div>
               {(validation.issues||[]).length > 0 && (
-                <div className="max-h-56 overflow-auto rounded-xl border-2 border-red-100 bg-red-50 p-3 text-sm">
-                  <div className="mb-1 font-bold text-red-600">Validation errors</div>
+                <div className="max-h-56 overflow-auto rounded-xl border-2 border-red-500/30 bg-red-500/10 p-3 text-sm">
+                  <div className="mb-1 font-bold text-red-400">Validation errors</div>
                   <ul className="space-y-1">
                     {validation.issues.map((iss:any,i:number)=>(<li key={i}><span className="font-semibold">{iss.questionRef}</span> · <code>{iss.path}</code>: {iss.message}</li>))}
                   </ul>

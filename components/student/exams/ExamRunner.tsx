@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   saveExamAnswerAction,
   submitExamAction,
+  toggleExamFlagAction,
 } from "@/app/actions/exam-student";
 import {
   groupQuestionsBySection,
@@ -26,6 +27,7 @@ import {
   FileText,
   CheckCircle,
   AlertTriangle,
+  Flag,
 } from "lucide-react";
 
 interface AnswerState {
@@ -52,6 +54,7 @@ export function ExamRunner({
   sections,
   questions,
   initialAnswers,
+  initialFlags = [],
 }: {
   attemptId: string;
   deadlineAt: string;
@@ -62,6 +65,7 @@ export function ExamRunner({
   sections: ExamSnapshot["sections"];
   questions: ExamSnapshot["questions"];
   initialAnswers: Array<{ paper_question_id: string; answer_text: string; mcq_option: string | null }>;
+  initialFlags?: string[];
 }) {
   const groups = useMemo(() => groupQuestionsBySection(sections, questions), [sections, questions]);
   const flat = useMemo(() => groups.flatMap((g) => g.questions), [groups]);
@@ -80,6 +84,7 @@ export function ExamRunner({
   const [confirming, setConfirming] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [showPaper, setShowPaper] = useState(false);
+  const [flags, setFlags] = useState<Set<string>>(() => new Set(initialFlags));
   const timers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
   const pendingRef = useRef<Record<string, AnswerState>>({});
   const submittedRef = useRef(false);
@@ -146,6 +151,17 @@ export function ExamRunner({
     [attemptId]
   );
 
+  function toggleFlag() {
+    if (!q || submitted) return;
+    const next = !flags.has(q.id);
+    setFlags((prev) => {
+      const s2 = new Set(prev);
+      if (next) s2.add(q.id); else s2.delete(q.id);
+      return s2;
+    });
+    void toggleExamFlagAction(attemptId, q.id, next);
+  }
+
   function updateAnswer(patch: Partial<AnswerState>) {
     if (!q || submitted) return;
     const next = { ...ans, ...patch };
@@ -197,7 +213,7 @@ export function ExamRunner({
           )}
           <span
             className={`flex items-center gap-1.5 rounded-full px-4 py-2 font-mono text-lg font-extrabold ${
-              urgent ? "bg-red-100 text-red-600" : "bg-lav-100 text-lav-600"
+              urgent ? "bg-red-500/15 text-red-400" : "bg-lav-100 text-lav-600"
             }`}
           >
             <Clock className="h-4 w-4" />
@@ -267,9 +283,21 @@ export function ExamRunner({
             >
               <ChevronLeft className="h-4 w-4" /> Previous
             </Button>
-            <span className="text-sm font-bold text-ink-400">
-              Question {current + 1} of {flat.length}
-            </span>
+            <div className="flex items-center gap-2">
+              {q && (
+                <Button
+                  variant={flags.has(q.id) ? "sun" : "secondary"}
+                  size="sm"
+                  onClick={toggleFlag}
+                  title={flags.has(q.id) ? "Unmark for review" : "Mark for review"}
+                >
+                  <Flag className="h-4 w-4" /> {flags.has(q.id) ? "Flagged" : "Mark for review"}
+                </Button>
+              )}
+              <span className="text-sm font-bold text-ink-400">
+                Question {current + 1} of {flat.length}
+              </span>
+            </div>
             <Button
               variant="secondary"
               size="sm"
@@ -309,7 +337,7 @@ export function ExamRunner({
                             : done
                               ? "bg-mint-100 text-mint-600"
                               : "bg-cream-100 text-ink-500 hover:bg-cream-200"
-                        }`}
+                        } ${flags.has(qq.id) && !active ? "ring-2 ring-sun-400" : ""}`}
                         title={`Q${qq.question_number} · ${qq.marks} marks${done ? " · answered" : ""}`}
                       >
                         {qq.question_number}
@@ -326,6 +354,9 @@ export function ExamRunner({
             </p>
             <p className="mt-1 flex items-center gap-1.5">
               <span className="inline-block h-3 w-3 rounded bg-cream-100" /> Unanswered ({unansweredCount})
+            </p>
+            <p className="mt-1 flex items-center gap-1.5">
+              <span className="inline-block h-3 w-3 rounded ring-2 ring-sun-400" /> Flagged for review ({flags.size})
             </p>
           </div>
         </Card>
@@ -400,7 +431,7 @@ function QuestionCard({
               className={`flex cursor-pointer items-start gap-3 rounded-xl border-2 px-4 py-3 transition-colors ${
                 answer.mcq === o.label
                   ? "border-lav-400 bg-lav-50"
-                  : "border-cream-200 bg-white hover:border-lav-200"
+                  : "border-cream-200 bg-cream-200 hover:border-lav-200"
               } ${disabled ? "pointer-events-none opacity-60" : ""}`}
             >
               <input
@@ -431,7 +462,7 @@ function QuestionCard({
                 ? "Write the output here…"
                 : "Type your answer here…"
           }
-          className={`w-full rounded-xl border-2 border-cream-300 bg-white px-4 py-3 text-sm font-semibold text-ink-700 outline-none focus:border-lav-300 disabled:opacity-60 ${
+          className={`w-full rounded-xl border-2 border-cream-300 bg-cream-200 px-4 py-3 text-sm font-semibold text-ink-700 outline-none focus:border-lav-300 disabled:opacity-60 ${
             isCode ? "font-mono" : ""
           }`}
         />

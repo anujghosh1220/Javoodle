@@ -10,7 +10,7 @@ import { saveCodingQuestionAction, setCodingQuestionStatusAction, deleteCodingQu
 import { DIFFICULTY_LABELS, DIFFICULTIES, type CodingDifficulty } from "@/lib/coding/shared";
 import { Plus, Trash2, ChevronDown } from "lucide-react";
 
-const inputCls = "w-full rounded-xl border-2 border-cream-300 bg-white px-3 py-2 text-sm font-semibold text-ink-700 outline-none focus:border-lav-300";
+const inputCls = "w-full rounded-xl border-2 border-cream-300 bg-cream-200 px-3 py-2 text-sm font-semibold text-ink-700 outline-none focus:border-lav-300";
 const labelCls = "mb-1 block text-xs font-extrabold uppercase tracking-wide text-ink-400";
 
 /** Derive a friendly title from the question text when none is given. */
@@ -123,7 +123,7 @@ export function CodingQuestionFields({
               <label className={labelCls}>Test cases <span className="normal-case text-ink-300">(optional — hidden cases are never shown to students)</span></label>
               <div className="flex flex-col gap-3">
                 {cases.map((c, i) => (
-                  <div key={i} className="rounded-xl bg-white p-3">
+                  <div key={i} className="rounded-xl bg-cream-200 p-3">
                     <div className="flex flex-wrap items-center gap-2">
                       <select value={c.kind} onChange={(e) => patchCase(i, { kind: e.target.value as "sample" | "hidden" })} className={`${inputCls} w-32`}>
                         <option value="sample">Sample</option><option value="hidden">Hidden</option>
@@ -186,7 +186,7 @@ export function CodingQuestionsClient({ questions }: { questions: Array<{ id: st
         </div>
         <Button size="sm" onClick={() => setShowForm((v) => !v)}><Plus className="h-4 w-4" /> New question</Button>
       </div>
-      {msg && <p className={`rounded-xl px-4 py-2 text-sm font-bold ${msg.ok ? "bg-mint-100 text-mint-600" : "bg-red-50 text-red-600"}`}>{msg.text}</p>}
+      {msg && <p className={`rounded-xl px-4 py-2 text-sm font-bold ${msg.ok ? "bg-mint-100 text-mint-600" : "bg-red-500/10 text-red-400"}`}>{msg.text}</p>}
 
       {showForm && (
         <Card className="p-6">

@@ -4,7 +4,13 @@ import { revalidatePath } from "next/cache";
 import { isSupabaseConfigured, hasServiceRoleKey } from "@/lib/env";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getStudentSession } from "@/lib/student/session";
-import { isAttemptExpired, isExamAvailable } from "@/lib/exams/shared";
+import {
+  isAttemptExpired,
+  isExamAvailable,
+  computeCountedScore,
+  requiredQuestionIds,
+  percentageOf,
+} from "@/lib/exams/shared";
 import type { ExamSnapshot } from "@/lib/exams/shared";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -290,6 +296,42 @@ export async function saveExamAnswerAction(
   return { ok: true };
 }
 
+/** Toggle the mark-for-review flag on an answer. */
+export async function toggleExamFlagAction(
+  attemptId: string,
+  paperQuestionId: string,
+  flagged: boolean
+): Promise<ExamActionResult> {
+  const session = await getStudentSession();
+  if (!session?.studentId) return { ok: false, error: "Session expired." };
+  if (!db()) return { ok: false, error: "Exam service unavailable." };
+  if (!/^[0-9a-f-]{36}$/i.test(attemptId) || !/^[0-9a-f-]{36}$/i.test(paperQuestionId)) {
+    return { ok: false, error: "Invalid request." };
+  }
+  const admin = createAdminClient();
+  const { data: attempt } = await admin
+    .from("exam_attempts")
+    .select("id,status")
+    .eq("id", attemptId)
+    .eq("student_id", session.studentId)
+    .maybeSingle();
+  if (!attempt) return { ok: false, error: "Attempt not found." };
+  if (attempt.status !== "in_progress") {
+    return { ok: false, error: "This exam has already been submitted." };
+  }
+  const { error } = await admin.from("exam_answers").upsert(
+    {
+      attempt_id: attemptId,
+      paper_question_id: paperQuestionId,
+      flagged: !!flagged,
+      saved_at: new Date().toISOString(),
+    },
+    { onConflict: "attempt_id,paper_question_id" }
+  );
+  if (error) return { ok: false, error: "Could not update flag." };
+  return { ok: true };
+}
+
 /** Final submission. Idempotent — safe to call twice or after time expiry. */
 export async function submitExamAction(attemptId: string): Promise<ExamActionResult> {
   const session = await getStudentSession();
@@ -300,7 +342,7 @@ export async function submitExamAction(attemptId: string): Promise<ExamActionRes
   const admin = createAdminClient();
   const { data: attempt } = await admin
     .from("exam_attempts")
-    .select("id,status")
+    .select("id,status,exam_snapshot,total_marks_snapshot,passing_marks_snapshot")
     .eq("id", attemptId)
     .eq("student_id", session.studentId)
     .maybeSingle();
@@ -318,6 +360,118 @@ export async function submitExamAction(attemptId: string): Promise<ExamActionRes
     .eq("status", "in_progress");
   if (error) return { ok: false, error: "Could not submit the exam. Please retry." };
 
+  // Auto-evaluate MCQs server-side from the frozen snapshot, then refresh
+  // totals/lifecycle. Failure here must never fail the submission itself.
+  try {
+    await autoEvaluateMcqAndRefresh(admin, attemptId);
+  } catch {
+    // Manual evaluation remains available as fallback.
+  }
+
   revalidatePath("/exams");
   return { ok: true };
+}
+
+/**
+ * Server-side MCQ auto-grading + evaluation-state refresh.
+ * Correctness is decided from exam_snapshot (frozen at attempt start) and
+ * exam_answers — never from client data.
+ */
+async function autoEvaluateMcqAndRefresh(
+  admin: ReturnType<typeof createAdminClient>,
+  attemptId: string
+): Promise<void> {
+  const { data: attempt } = await admin
+    .from("exam_attempts")
+    .select("id,status,exam_snapshot,total_marks_snapshot,passing_marks_snapshot,evaluated_at")
+    .eq("id", attemptId)
+    .maybeSingle();
+  if (!attempt) return;
+  const a = attempt as any;
+  const snapshot = a.exam_snapshot as ExamSnapshot;
+
+  const mcqQuestions = (snapshot?.questions ?? []).filter(
+    (q) => q.question_type === "mcq"
+  );
+
+  if (mcqQuestions.length > 0) {
+    const { data: answers } = await admin
+      .from("exam_answers")
+      .select("paper_question_id,answer_text,mcq_option")
+      .eq("attempt_id", attemptId);
+    const ansMap = new Map(
+      (answers ?? []).map((r: any) => [r.paper_question_id, r])
+    );
+
+    const rows = mcqQuestions.map((q) => {
+      const ans = ansMap.get(q.id) as any;
+      const chosenLabel = ans?.mcq_option ?? null;
+      const chosenText = chosenLabel
+        ? (q.options ?? []).find((o) => o.label === chosenLabel)?.text ?? null
+        : null;
+      const correct = (q.model_answer ?? "").trim().toLowerCase();
+      const candidates = [chosenText, chosenLabel]
+        .filter((c): c is string => !!c)
+        .map((c) => c.trim().toLowerCase());
+      const right = correct.length > 0 && candidates.includes(correct);
+      return {
+        attempt_id: attemptId,
+        paper_question_id: q.id,
+        marks_awarded: right ? Number(q.marks) : 0,
+        feedback: right ? "Correct — auto-evaluated" : "Incorrect — auto-evaluated",
+        evaluated_by: null,
+        evaluated_at: new Date().toISOString(),
+      };
+    });
+
+    const { error } = await admin
+      .from("exam_evaluations")
+      .upsert(rows, { onConflict: "attempt_id,paper_question_id" });
+    if (error) return; // fall back to manual evaluation
+  }
+
+  // Recompute totals + lifecycle (mirrors admin refreshAttemptEvaluation).
+  const { data: evals } = await admin
+    .from("exam_evaluations")
+    .select("paper_question_id,marks_awarded")
+    .eq("attempt_id", attemptId);
+  const { data: selRows } = await admin
+    .from("exam_attempt_question_selections")
+    .select("paper_question_id")
+    .eq("attempt_id", attemptId);
+  const selections = new Set((selRows ?? []).map((r: any) => r.paper_question_id));
+
+  const required = requiredQuestionIds(snapshot, selections);
+  const evaluatedIds = new Set((evals ?? []).map((e: any) => e.paper_question_id));
+  const allEvaluated =
+    required.size > 0 && [...required].every((id) => evaluatedIds.has(id));
+
+  const { totalScore } = computeCountedScore(
+    (evals ?? []).map((e: any) => ({
+      paper_question_id: e.paper_question_id,
+      marks_awarded: Number(e.marks_awarded),
+    })),
+    snapshot,
+    selections
+  );
+  const totalMarks =
+    a.total_marks_snapshot === null ? null : Number(a.total_marks_snapshot);
+  const percentage = totalMarks ? percentageOf(totalScore, totalMarks) : null;
+
+  let status = a.status as string;
+  const now = new Date().toISOString();
+  if (status === "submitted") status = "under_evaluation";
+  if (status === "under_evaluation" && allEvaluated) {
+    status = "evaluation_completed";
+  }
+
+  await admin
+    .from("exam_attempts")
+    .update({
+      status,
+      total_score: totalScore,
+      percentage,
+      evaluated_at: allEvaluated ? now : a.evaluated_at ?? null,
+    })
+    .eq("id", attemptId);
 }

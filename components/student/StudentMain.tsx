@@ -11,7 +11,7 @@ export function StudentMain({ children }: { children: React.ReactNode }) {
     <main
       className={cn(
         "mx-auto w-full flex-1 px-4 py-6 pb-24 sm:px-6 lg:px-8",
-        wide ? "max-w-[1800px]" : "max-w-5xl"
+        wide ? "max-w-[1800px]" : "max-w-[1500px]"
       )}
     >
       {children}

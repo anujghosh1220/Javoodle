@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { reviewCodingSubmissionAction } from "@/app/actions/coding-admin";
 import { ArrowLeft } from "lucide-react";
 
-const inputCls = "w-full rounded-xl border-2 border-cream-300 bg-white px-3 py-2 text-sm font-semibold text-ink-700 outline-none focus:border-lav-300";
+const inputCls = "w-full rounded-xl border-2 border-cream-300 bg-cream-200 px-3 py-2 text-sm font-semibold text-ink-700 outline-none focus:border-lav-300";
 
 interface SubRow {
     id: string;

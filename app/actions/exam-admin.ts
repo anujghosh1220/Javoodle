@@ -114,10 +114,11 @@ export async function createExamAction(formData: FormData): Promise<AdminActionR
   const admin = createAdminClient();
 
   const title = str(formData, "title");
-  const duration = num(formData, "duration_minutes", 0);
+  // Simplified creation: only title + total marks are collected. Everything
+  // else gets safe internal defaults (duration 120 min, no window, no PDF).
+  const duration = num(formData, "duration_minutes", 120) || 120;
   const totalMarks = num(formData, "total_marks", 0);
-  if (!title) return { ok: false, error: "Exam title is required." };
-  if (duration <= 0) return { ok: false, error: "Duration must be greater than 0 minutes." };
+  if (!title) return { ok: false, error: "Exam name is required." };
   if (totalMarks <= 0) return { ok: false, error: "Total marks must be greater than 0." };
 
   const file = formData.get("paper");
@@ -499,9 +500,6 @@ export async function setExamStatusAction(
     ]);
     if (!qs || qs.length === 0) {
       return { ok: false, error: "Add at least one question before publishing." };
-    }
-    if (!e.paper_document_id) {
-      return { ok: false, error: "Upload the question paper PDF before publishing." };
     }
     // Achievable = compulsory marks + capped optional-group marks. With no
     // optional groups this equals the plain question-marks sum.

@@ -59,7 +59,7 @@ export function DocumentUploadForm() {
         <p className="text-sm text-ink-400">or select files from your device</p>
         <label className="mt-2">
           <input type="file" multiple accept=".pdf,.docx,.png,.jpg,.jpeg,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/png,image/jpeg" onChange={onSelect} className="hidden" />
-          <span className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold text-ink-700 border-2 border-cream-300 hover:border-lav-300">Select files</span>
+          <span className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-cream-200 px-4 py-2 text-sm font-bold text-ink-700 border-2 border-cream-300 hover:border-lav-300">Select files</span>
         </label>
       </div>
 

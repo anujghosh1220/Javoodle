@@ -78,7 +78,7 @@ export default async function SubmissionsPage({
           <select
             name="exam"
             defaultValue={sp.exam ?? ""}
-            className="rounded-xl border-2 border-cream-300 bg-white px-3 py-2 text-sm font-bold text-ink-700"
+            className="rounded-xl border-2 border-cream-300 bg-cream-200 px-3 py-2 text-sm font-bold text-ink-700"
           >
             <option value="">All exams</option>
             {exams.map((e) => (
@@ -88,7 +88,7 @@ export default async function SubmissionsPage({
           <select
             name="status"
             defaultValue={sp.status ?? ""}
-            className="rounded-xl border-2 border-cream-300 bg-white px-3 py-2 text-sm font-bold text-ink-700"
+            className="rounded-xl border-2 border-cream-300 bg-cream-200 px-3 py-2 text-sm font-bold text-ink-700"
           >
             <option value="">All statuses</option>
             {statuses.map((s) => (

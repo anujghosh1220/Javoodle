@@ -22,7 +22,7 @@ export function AdminLoginForm() {
           required
           autoComplete="email"
           placeholder="admin@example.com"
-          className="rounded-xl border-2 border-cream-300 bg-white px-4 py-3 font-semibold text-ink-800 placeholder:text-ink-400 focus:border-lav-300 focus:outline-none"
+          className="rounded-xl border-2 border-cream-300 bg-cream-200 px-4 py-3 font-semibold text-ink-800 placeholder:text-ink-400 focus:border-lav-300 focus:outline-none"
         />
       </label>
       <label className="flex flex-col gap-1 text-left">
@@ -35,7 +35,7 @@ export function AdminLoginForm() {
           required
           autoComplete="current-password"
           placeholder="••••••••"
-          className="rounded-xl border-2 border-cream-300 bg-white px-4 py-3 font-semibold text-ink-800 placeholder:text-ink-400 focus:border-lav-300 focus:outline-none"
+          className="rounded-xl border-2 border-cream-300 bg-cream-200 px-4 py-3 font-semibold text-ink-800 placeholder:text-ink-400 focus:border-lav-300 focus:outline-none"
         />
       </label>
       {state.error && (

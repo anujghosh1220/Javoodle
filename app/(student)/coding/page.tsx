@@ -4,7 +4,7 @@ import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { Code2, Clock, Target } from "lucide-react";
 import { getStudentSession } from "@/lib/student/session";
-import { listPublishedCodingQuestions } from "@/lib/coding/data";
+import { listPublishedCodingQuestions, getStudentSubmittedQuestionIds } from "@/lib/coding/data";
 import { DIFFICULTY_LABELS } from "@/lib/coding/shared";
 import { Card } from "@/components/ui/Card";
 import { Chip } from "@/components/ui/Chip";
@@ -19,7 +19,10 @@ export default async function CodingLabPage() {
   await connection();
   const session = await getStudentSession();
   if (!session) redirect("/");
-  const questions = await listPublishedCodingQuestions();
+  const [questions, submittedIds] = await Promise.all([
+    listPublishedCodingQuestions(),
+    session.studentId ? getStudentSubmittedQuestionIds(session.studentId) : Promise.resolve(new Set<string>()),
+  ]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -35,13 +38,15 @@ export default async function CodingLabPage() {
         <EmptyState title="Looks like a fresh notebook! 📓" description="Your coding adventures will appear here soon." />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
-          {questions.map((q) => (
-            <Link key={q.id} href={`/coding/${q.id}`}>
-              <Card className="flex h-full flex-col gap-3 p-5 transition-shadow hover:shadow-lg">
+          {questions.map((q) => {
+            const submitted = submittedIds.has(q.id);
+            const card = (
+              <Card className={`flex h-full flex-col gap-3 p-5 transition-all ${submitted ? "opacity-60" : "transition-shadow hover:shadow-lg"}`}>
                 <div className="flex flex-wrap items-center gap-2">
                   <Chip tone={tone[q.difficulty] ?? "lav"}>{DIFFICULTY_LABELS[q.difficulty]}</Chip>
                   {q.topic && <Chip tone="mint">{q.topic}</Chip>}
                   <Chip tone="ink">{Number(q.marks)} marks</Chip>
+                  {submitted && <Chip tone="mint">✓ Submitted</Chip>}
                 </div>
                 <h2 className="text-lg font-extrabold text-ink-800">{q.title}</h2>
                 {q.description && <p className="line-clamp-2 text-sm font-semibold text-ink-500">{q.description}</p>}
@@ -52,8 +57,13 @@ export default async function CodingLabPage() {
                   <span className="flex items-center gap-1"><Target className="h-3.5 w-3.5" /> Java</span>
                 </div>
               </Card>
-            </Link>
-          ))}
+            );
+            return submitted ? (
+              <div key={q.id} className="cursor-not-allowed" title="Already submitted">{card}</div>
+            ) : (
+              <Link key={q.id} href={`/coding/${q.id}`}>{card}</Link>
+            );
+          })}
         </div>
       )}
     </div>

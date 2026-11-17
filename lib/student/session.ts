@@ -1,4 +1,5 @@
 import { cookies, headers } from "next/headers";
+import { cache } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { isSupabaseConfigured, hasServiceRoleKey } from "@/lib/env";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -127,7 +128,7 @@ export async function createStudentSession(
   return { sessionRowId: null, studentId: null, displayName, persistent: false };
 }
 
-export async function getStudentSession(): Promise<StudentSession | null> {
+const getStudentSessionInner = async (): Promise<StudentSession | null> => {
   const store = await cookies();
   const token = store.get(SESSION_COOKIE)?.value;
   if (!token) return null;
@@ -192,7 +193,11 @@ export async function getStudentSession(): Promise<StudentSession | null> {
   return { sessionRowId: null, studentId: null, displayName, persistent: false };
 }
 
+/** Deduped per request — layout + page share one session lookup. */
+export const getStudentSession = cache(getStudentSessionInner);
+
 /** Revoke the DB session row (if any) and clear cookies. */
+
 export async function clearStudentSession(): Promise<void> {
   const store = await cookies();
   const token = store.get(SESSION_COOKIE)?.value;

@@ -148,7 +148,7 @@ export function CodingWorkspace({ question, priorSubmissions }: { question: Q; p
 
           <Card className="p-3">
             <label className="mb-1 block text-xs font-extrabold uppercase tracking-wide text-ink-400">Standard input (stdin)</label>
-            <textarea value={stdin} onChange={(e) => setStdin(e.target.value)} rows={3} placeholder="Input your program reads (optional)…" className="w-full rounded-xl border-2 border-cream-300 bg-white px-3 py-2 font-mono text-xs text-ink-700 outline-none focus:border-lav-300" />
+            <textarea value={stdin} onChange={(e) => setStdin(e.target.value)} rows={3} placeholder="Input your program reads (optional)…" className="w-full rounded-xl border-2 border-cream-300 bg-cream-200 px-3 py-2 font-mono text-xs text-ink-700 outline-none focus:border-lav-300" />
           </Card>
 
           <div className="flex flex-wrap gap-2">
@@ -160,7 +160,7 @@ export function CodingWorkspace({ question, priorSubmissions }: { question: Q; p
           {!canSubmit && run.status !== "success" && (
             <p className="text-xs font-semibold text-ink-400">Run your code successfully to enable Submit — a successful run does not mean the answer is correct.</p>
           )}
-          {msg && <p className={`rounded-xl px-4 py-2 text-sm font-bold ${msg.ok ? "bg-mint-100 text-mint-600" : "bg-red-50 text-red-600"}`}>{msg.text}</p>}
+          {msg && <p className={`rounded-xl px-4 py-2 text-sm font-bold ${msg.ok ? "bg-mint-100 text-mint-600" : "bg-red-500/10 text-red-400"}`}>{msg.text}</p>}
 
           {/* Console */}
           <Card className="flex flex-col gap-2 bg-[#1e1e1e] p-4 text-sm">

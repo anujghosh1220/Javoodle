@@ -80,3 +80,13 @@ export async function getStudentCodingSubmissions(studentId: string, questionId?
   const { data } = await query;
   return data ?? [];
 }
+
+/** Question IDs this student has already submitted (locked). */
+export async function getStudentSubmittedQuestionIds(studentId: string): Promise<Set<string>> {
+  const admin = createAdminClient();
+  const { data } = await admin
+    .from("coding_submissions")
+    .select("question_id")
+    .eq("student_id", studentId);
+  return new Set((data ?? []).map((r) => (r as { question_id: string }).question_id));
+}

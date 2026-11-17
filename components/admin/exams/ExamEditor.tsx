@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/Card";
 import { Chip } from "@/components/ui/Chip";
 import { Button } from "@/components/ui/Button";
-import { QuestionStructureEditor } from "@/components/admin/exams/QuestionStructureEditor";
+import { SimpleQuestionEditor } from "@/components/admin/exams/SimpleQuestionEditor";
 import { ExamDraftReview } from "@/components/admin/exams/ExamDraftReview";
 import {
   updateExamDetailsAction,
@@ -17,7 +17,7 @@ import type { ExamAdminDetail } from "@/lib/exams/admin-data";
 import { FileText, Upload, Trash2 } from "lucide-react";
 
 const inputCls =
-  "w-full rounded-xl border-2 border-cream-300 bg-white px-3 py-2 text-sm font-semibold text-ink-700 outline-none focus:border-lav-300";
+  "w-full rounded-xl border-2 border-cream-300 bg-cream-200 px-3 py-2 text-sm font-semibold text-ink-700 outline-none focus:border-lav-300";
 const labelCls = "mb-1 block text-xs font-extrabold uppercase tracking-wide text-ink-400";
 
 function toLocalInput(iso: string | null): string {
@@ -35,7 +35,7 @@ export function ExamEditor({
   paperUrl: string | null;
 }) {
   const router = useRouter();
-  const { exam, sections, questions, paperFileName, attemptCount } = detail;
+  const { exam, questions, paperFileName, attemptCount } = detail;
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const paperInput = useRef<HTMLInputElement>(null);
@@ -143,7 +143,7 @@ export function ExamEditor({
       {msg && (
         <p
           className={`rounded-xl px-4 py-2 text-sm font-bold ${
-            msg.ok ? "bg-mint-100 text-mint-600" : "bg-red-50 text-red-600"
+            msg.ok ? "bg-mint-100 text-mint-600" : "bg-red-500/10 text-red-400"
           }`}
         >
           {msg.text}
@@ -252,14 +252,11 @@ export function ExamEditor({
         frozen={structureFrozen}
       />
 
-      {/* Question structure */}
-      <QuestionStructureEditor
+      {/* Question structure — simplified flat list (single internal section) */}
+      <SimpleQuestionEditor
         examId={exam.id}
-        sections={sections}
         questions={questions}
-        totalMarks={Number(exam.total_marks)}
         frozen={structureFrozen}
-        attemptCount={attemptCount}
       />
     </div>
   );

@@ -27,6 +27,16 @@ export async function runCodingCodeAction(questionId: string, source: string, st
   const { data: q } = await s.admin.from("coding_questions").select("id,status").eq("id", questionId).eq("status", "published").maybeSingle();
   if (!q) return { ok: false as const, error: "Question not available." };
 
+  // Locked questions cannot be run again.
+  const { data: existing } = await s.admin
+    .from("coding_submissions")
+    .select("id")
+    .eq("student_id", s.studentId)
+    .eq("question_id", questionId)
+    .limit(1)
+    .maybeSingle();
+  if (existing) return { ok: false as const, error: "You already submitted this question — it's locked." };
+
   // Rate limit (DB-backed, serverless-safe): burst cap per minute and an
   // hourly cap per student, counted from the immutable run log.
   const now = Date.now();
@@ -76,6 +86,16 @@ export async function submitCodingSolutionAction(questionId: string, source: str
   }
   const { data: q } = await s.admin.from("coding_questions").select("id,status").eq("id", questionId).eq("status", "published").maybeSingle();
   if (!q) return { ok: false as const, error: "Question not available." };
+
+  // Locked questions cannot be submitted again (also guards double-submit races).
+  const { data: existingSub } = await s.admin
+    .from("coding_submissions")
+    .select("id")
+    .eq("student_id", s.studentId)
+    .eq("question_id", questionId)
+    .limit(1)
+    .maybeSingle();
+  if (existingSub) return { ok: false as const, error: "You already submitted this question — it's locked." };
 
   // Server-side proof: a successful execution run must exist for this exact
   // source hash, student and question. Client claims are never trusted.

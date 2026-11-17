@@ -252,7 +252,7 @@ export function EvaluationWorkspace({ data }: { data: EvaluationWorkspaceData })
                     </p>
                   )
                 ) : (
-                  <p className="mt-1 rounded-xl bg-red-50 p-4 text-sm font-bold text-red-500">
+                  <p className="mt-1 rounded-xl bg-red-500/10 p-4 text-sm font-bold text-red-500">
                     No answer submitted for this question.
                   </p>
                 )}
@@ -279,7 +279,7 @@ export function EvaluationWorkspace({ data }: { data: EvaluationWorkspaceData })
                     step={0.5}
                     value={ev.marks}
                     onChange={(e) => setEval(q.id, { marks: e.target.value, saved: false })}
-                    className="w-full rounded-xl border-2 border-cream-300 bg-white px-3 py-2 text-sm font-bold text-ink-700 outline-none focus:border-lav-300"
+                    className="w-full rounded-xl border-2 border-cream-300 bg-cream-200 px-3 py-2 text-sm font-bold text-ink-700 outline-none focus:border-lav-300"
                     placeholder="0"
                   />
                   <div className="mt-2 flex gap-1">
@@ -299,7 +299,7 @@ export function EvaluationWorkspace({ data }: { data: EvaluationWorkspaceData })
                     rows={3}
                     value={ev.feedback}
                     onChange={(e) => setEval(q.id, { feedback: e.target.value, saved: false })}
-                    className="w-full rounded-xl border-2 border-cream-300 bg-white px-3 py-2 text-sm font-semibold text-ink-700 outline-none focus:border-lav-300"
+                    className="w-full rounded-xl border-2 border-cream-300 bg-cream-200 px-3 py-2 text-sm font-semibold text-ink-700 outline-none focus:border-lav-300"
                     placeholder="What was good, what was missing…"
                   />
                 </div>

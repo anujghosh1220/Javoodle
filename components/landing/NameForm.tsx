@@ -26,7 +26,7 @@ export function NameForm() {
           maxLength={40}
           autoComplete="given-name"
           placeholder="What's your name?"
-          className="w-full rounded-full border-2 border-cream-300 bg-white px-6 py-4 text-lg font-semibold text-ink-800 placeholder:text-ink-400 focus:border-lav-300 focus:outline-none"
+          className="w-full rounded-full border-2 border-cream-300 bg-cream-200 px-6 py-4 text-lg font-semibold text-ink-800 placeholder:text-ink-400 focus:border-lav-300 focus:outline-none"
         />
         <Button type="submit" size="lg" disabled={pending} className="shrink-0">
           {pending ? (

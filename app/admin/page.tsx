@@ -94,20 +94,20 @@ export default async function AdminDashboardPage() {
           </Link>
           <Link
             href="/admin/questions"
-            className="rounded-full border-2 border-cream-300 bg-white px-4 py-2 text-sm font-bold text-ink-500 transition-colors hover:border-lav-300"
+            className="rounded-full border-2 border-cream-300 bg-cream-200 px-4 py-2 text-sm font-bold text-ink-500 transition-colors hover:border-lav-300"
           >
             Question Studio →
           </Link>
           <Link
             href="/admin/coding"
-            className="rounded-full border-2 border-cream-300 bg-white px-4 py-2 text-sm font-bold text-ink-500 transition-colors hover:border-mint-300 hover:text-mint-600"
+            className="rounded-full border-2 border-cream-300 bg-cream-200 px-4 py-2 text-sm font-bold text-ink-500 transition-colors hover:border-mint-300 hover:text-mint-600"
           >
             Coding Lab →
           </Link>
           <form action={adminLogout}>
             <button
               type="submit"
-              className="flex items-center gap-2 rounded-full border-2 border-cream-300 bg-white px-4 py-2 text-sm font-bold text-ink-500 transition-colors hover:border-red-300 hover:text-red-500"
+              className="flex items-center gap-2 rounded-full border-2 border-cream-300 bg-cream-200 px-4 py-2 text-sm font-bold text-ink-500 transition-colors hover:border-red-300 hover:text-red-500"
             >
               <LogOut className="h-4 w-4" /> Sign out
             </button>

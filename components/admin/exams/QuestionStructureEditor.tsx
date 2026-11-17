@@ -32,7 +32,7 @@ interface QuestionState {
 }
 
 const inputCls =
-  "w-full rounded-xl border-2 border-cream-300 bg-white px-3 py-2 text-sm font-semibold text-ink-700 outline-none focus:border-lav-300";
+  "w-full rounded-xl border-2 border-cream-300 bg-cream-200 px-3 py-2 text-sm font-semibold text-ink-700 outline-none focus:border-lav-300";
 
 let keyCounter = 0;
 const nextKey = () => `k${Date.now().toString(36)}_${keyCounter++}`;

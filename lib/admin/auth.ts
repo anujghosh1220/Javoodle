@@ -1,3 +1,4 @@
+import { cache } from "react";
 import "server-only";
 
 import { redirect } from "next/navigation";
@@ -28,8 +29,11 @@ export async function getAdminUser(): Promise<User | null> {
 }
 
 /** For pages/layouts: redirects to login when not an admin. */
-export async function requireAdmin(): Promise<AdminContext> {
+const requireAdminInner = async (): Promise<AdminContext> => {
   const user = await getAdminUser();
   if (!user) redirect("/admin/login");
   return { user };
 }
+
+/** Deduped per request — layout + page share one admin check. */
+export const requireAdmin = cache(requireAdminInner);

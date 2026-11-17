@@ -20,7 +20,7 @@ import {
 import { Sparkles, AlertTriangle, CheckCircle2, X } from "lucide-react";
 
 const inputCls =
-  "w-full rounded-xl border-2 border-cream-300 bg-white px-3 py-2 text-sm font-semibold text-ink-700 outline-none focus:border-lav-300";
+  "w-full rounded-xl border-2 border-cream-300 bg-cream-200 px-3 py-2 text-sm font-semibold text-ink-700 outline-none focus:border-lav-300";
 
 export function ExamDraftReview({
   examId,
@@ -207,7 +207,7 @@ export function ExamDraftReview({
         <p className="text-sm font-semibold text-sun-500">Structure is frozen — attempts exist.</p>
       )}
       {msg && (
-        <p className={`rounded-xl px-4 py-2 text-sm font-bold ${msg.ok ? "bg-mint-100 text-mint-600" : "bg-red-50 text-red-600"}`}>
+        <p className={`rounded-xl px-4 py-2 text-sm font-bold ${msg.ok ? "bg-mint-100 text-mint-600" : "bg-red-500/10 text-red-400"}`}>
           {msg.text}
         </p>
       )}
@@ -231,7 +231,7 @@ export function ExamDraftReview({
               <div>Marks: <span className="font-bold text-ink-800">{draft.meta.total_marks ?? "—"}</span></div>
             </div>
             {draft.meta.instructions && (
-              <p className="mt-2 line-clamp-4 whitespace-pre-wrap rounded-xl bg-white p-3 text-xs font-semibold text-ink-500">
+              <p className="mt-2 line-clamp-4 whitespace-pre-wrap rounded-xl bg-cream-200 p-3 text-xs font-semibold text-ink-500">
                 {draft.meta.instructions}
               </p>
             )}
@@ -251,7 +251,7 @@ export function ExamDraftReview({
                   <summary className="cursor-pointer text-xs font-bold text-ink-400">
                     {draft.unparsedBlocks.length} unparsed text block(s) — verify nothing was missed
                   </summary>
-                  <pre className="mt-2 max-h-48 overflow-auto whitespace-pre-wrap rounded-xl bg-white p-3 text-xs text-ink-500">
+                  <pre className="mt-2 max-h-48 overflow-auto whitespace-pre-wrap rounded-xl bg-cream-200 p-3 text-xs text-ink-500">
                     {draft.unparsedBlocks.join("\n---\n")}
                   </pre>
                 </details>
@@ -265,7 +265,7 @@ export function ExamDraftReview({
               <h3 className="text-sm font-extrabold text-ink-700">Optional question rules</h3>
               <div className="mt-2 flex flex-col gap-3">
                 {draft.optional_groups.map((g) => (
-                  <div key={g.key} className="flex flex-wrap items-center gap-2 rounded-xl bg-white p-3">
+                  <div key={g.key} className="flex flex-wrap items-center gap-2 rounded-xl bg-cream-200 p-3">
                     <input
                       className={`${inputCls} max-w-xs font-extrabold`}
                       value={g.title}

@@ -55,7 +55,7 @@ export default async function QuestionStudioPage() {
             <Stat label="Questions extracted" value={data.counts.questionsExtracted} icon={Database} tone="text-mint-600 bg-mint-100" />
             <Stat label="Awaiting review" value={data.counts.questionsAwaitingReview} icon={ListChecks} tone="text-sun-500 bg-sun-100" />
             <Stat label="Approved questions" value={data.counts.questionsApproved} icon={CheckCircle} tone="text-mint-600 bg-mint-100" />
-            <Stat label="Rejected questions" value={data.counts.questionsRejected} icon={XCircle} tone="text-red-500 bg-red-100" />
+            <Stat label="Rejected questions" value={data.counts.questionsRejected} icon={XCircle} tone="text-red-500 bg-red-500/15" />
             <Stat label="Answers unverified" value={data.counts.answersUnverified} icon={AlertCircle} tone="text-sun-500 bg-sun-100" />
           </section>
 

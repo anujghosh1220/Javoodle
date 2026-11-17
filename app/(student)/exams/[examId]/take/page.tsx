@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { BackButton } from "@/components/student/BackButton";
 import { getStudentSession } from "@/lib/student/session";
 import { getAttemptRefForStudent, getAttemptForStudent } from "@/lib/exams/student-data";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { isSupabaseConfigured, hasServiceRoleKey } from "@/lib/env";
 import { ExamRunner } from "@/components/student/exams/ExamRunner";
 import { EmptyState } from "@/components/ui/EmptyState";
 
@@ -52,6 +54,18 @@ export default async function TakeExamPage({
       )
     : state.snapshot?.questions ?? [];
 
+  // Mark-for-review flags (requires migration 0007 — degrades to none if absent).
+  let initialFlags: string[] = [];
+  if (isSupabaseConfigured() && hasServiceRoleKey()) {
+    const admin = createAdminClient();
+    const { data: flagRows } = await admin
+      .from("exam_answers")
+      .select("paper_question_id")
+      .eq("attempt_id", state.attempt.id)
+      .eq("flagged", true);
+    initialFlags = (flagRows ?? []).map((r: { paper_question_id: string }) => r.paper_question_id);
+  }
+
   return (
     <ExamRunner
       attemptId={state.attempt.id}
@@ -63,6 +77,7 @@ export default async function TakeExamPage({
       sections={state.snapshot?.sections ?? []}
       questions={visibleQuestions}
       initialAnswers={state.answers}
+      initialFlags={initialFlags}
     />
   );
 }
