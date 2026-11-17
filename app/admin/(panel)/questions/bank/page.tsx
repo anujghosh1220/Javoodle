@@ -6,6 +6,7 @@ import { listDocuments } from "@/lib/documents/admin";
 import { getTopicsList } from "@/lib/questions/service";
 import { Chip } from "@/components/ui/Chip";
 import { QuestionBank } from "@/components/questions/QuestionBank";
+import { BackButton } from "@/components/student/BackButton";
 
 export const metadata: Metadata = { title: "Question bank" };
 export const instant = false;
@@ -22,6 +23,7 @@ export default async function QuestionBankPage({ searchParams }: { searchParams:
   const [questions, docs, topics] = await Promise.all([listQuestions(filters), listDocuments(), getTopicsList()]);
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 px-4 py-8 sm:px-6">
+      <BackButton href="/admin/questions" label="Back to Questions" />
       <header>
         <Chip tone="lav">Question Studio</Chip>
         <h1 className="mt-1 text-2xl font-extrabold text-ink-800">Question bank</h1>

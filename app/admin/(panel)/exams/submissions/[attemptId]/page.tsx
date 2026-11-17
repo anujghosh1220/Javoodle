@@ -8,6 +8,7 @@ import { isSupabaseConfigured, hasServiceRoleKey } from "@/lib/env";
 import { getAttemptForEvaluation } from "@/lib/exams/admin-data";
 import { EvaluationWorkspace } from "@/components/admin/exams/EvaluationWorkspace";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { BackButton } from "@/components/student/BackButton";
 
 export const metadata: Metadata = { title: "Evaluate submission" };
 export const instant = false;
@@ -24,6 +25,7 @@ export default async function EvaluateAttemptPage({
   if (!isSupabaseConfigured() || !hasServiceRoleKey()) {
     return (
       <main className="mx-auto w-full max-w-5xl px-4 py-8">
+      <BackButton href="/admin/exams/submissions" label="Back to Submissions" />
         <EmptyState title="Database not connected" description="Configure Supabase to evaluate submissions." />
       </main>
     );

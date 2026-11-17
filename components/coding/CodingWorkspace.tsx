@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/Card";
 import { Chip } from "@/components/ui/Chip";
 import { Button } from "@/components/ui/Button";
 import { runCodingCodeAction, submitCodingSolutionAction } from "@/app/actions/coding-student";
+import "@/lib/monaco-setup";
 import { DIFFICULTY_LABELS, type CodingDifficulty } from "@/lib/coding/shared";
 import { Play, Send, RotateCcw, Trash2 } from "lucide-react";
 

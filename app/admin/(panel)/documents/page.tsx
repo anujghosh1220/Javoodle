@@ -6,6 +6,7 @@ import { listDocuments } from "@/lib/documents/admin";
 import { Chip } from "@/components/ui/Chip";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { DocumentsManager } from "@/components/questions/DocumentsManager";
+import { BackButton } from "@/components/student/BackButton";
 
 export const metadata: Metadata = { title: "Documents" };
 export const instant = false;
@@ -15,6 +16,7 @@ export default async function DocumentsPage() {
   const docs = await listDocuments();
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-4 py-8 sm:px-6">
+      <BackButton href="/admin" label="Back to Admin" />
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <Chip tone="lav">Question Studio</Chip>

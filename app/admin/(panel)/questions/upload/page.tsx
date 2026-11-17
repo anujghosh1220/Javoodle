@@ -4,6 +4,7 @@ import { requireAdmin } from "@/lib/admin/auth";
 import { Card } from "@/components/ui/Card";
 import { Chip } from "@/components/ui/Chip";
 import { DocumentUploadForm } from "@/components/questions/DocumentUploadForm";
+import { BackButton } from "@/components/student/BackButton";
 
 export const metadata: Metadata = { title: "Upload documents" };
 export const instant = false;
@@ -12,6 +13,7 @@ export default async function UploadPage() {
   await requireAdmin();
   return (
     <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-4 py-8 sm:px-6">
+      <BackButton href="/admin/questions" label="Back to Questions" />
       <header>
         <Chip tone="lav">Question Studio</Chip>
         <h1 className="mt-1 text-2xl font-extrabold text-ink-800">Upload documents</h1>

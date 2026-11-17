@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { TrendingUp } from "lucide-react";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { BackButton } from "@/components/student/BackButton";
 
 export const metadata: Metadata = { title: "My Growth" };
 
@@ -16,6 +17,7 @@ export default function GrowthPage() {
           Watch yourself improve — accuracy, topics mastered, XP and trends.
         </p>
       </header>
+      <BackButton href="/dashboard" label="Back to Dashboard" />
       <EmptyState
         title="Your growth story begins now"
         description="As you practice and sit mock exams, this page will chart your progress, highlight weak areas and suggest what to revise next."

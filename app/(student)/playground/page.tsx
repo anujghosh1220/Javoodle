@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Code2 } from "lucide-react";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { BackButton } from "@/components/student/BackButton";
 
 export const metadata: Metadata = { title: "Playground" };
 
@@ -17,6 +18,7 @@ export default function PlaygroundPage() {
           environment — never on the app server.
         </p>
       </header>
+      <BackButton href="/dashboard" label="Back to Dashboard" />
       <EmptyState
         title="The code editor is on its way"
         description="We're wiring up a proper Java editor with run, test cases and instant feedback. It lands in an upcoming update."

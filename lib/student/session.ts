@@ -95,8 +95,10 @@ export async function createStudentSession(
 
   if (dbEnabled()) {
     const admin = createAdminClient();
-    const hdrs = await headers();
-    const studentId = await findOrCreateStudent(admin, displayName);
+    const [hdrs, studentId] = await Promise.all([
+      headers(),
+      findOrCreateStudent(admin, displayName),
+    ]);
 
     const { data, error } = await admin
       .from("student_sessions")

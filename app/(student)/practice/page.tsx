@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Brain } from "lucide-react";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { BackButton } from "@/components/student/BackButton";
 
 export const metadata: Metadata = { title: "Practice" };
 
@@ -16,6 +17,7 @@ export default function PracticePage() {
           Unlimited attempts, hints and instant feedback. No pressure — just progress.
         </p>
       </header>
+      <BackButton href="/dashboard" label="Back to Dashboard" />
       <EmptyState
         title="Question bank loading"
         description="MCQs, fill-in-the-blanks, output prediction, error-spotting and theory drills are being prepared. Practice mode rewards effort, not just perfect scores."

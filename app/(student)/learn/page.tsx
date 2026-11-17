@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { BookOpen } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { BackButton } from "@/components/student/BackButton";
 
 export const metadata: Metadata = { title: "Learn" };
 
@@ -17,6 +18,7 @@ export default function LearnPage() {
           Bite-sized Java lessons across the ICSE syllabus, in three phases.
         </p>
       </header>
+      <BackButton href="/dashboard" label="Back to Dashboard" />
       <EmptyState
         title="Lessons are almost ready"
         description="We're loading the ICSE Computer Applications syllabus into your personal learning path. Check back soon — your first lesson is on its way!"
