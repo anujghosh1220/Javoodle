@@ -49,7 +49,7 @@ export const lessonsP1 = [
         { type: "paragraph", text: "**Operators** perform actions on values: arithmetic (`+ - * / %`), relational (`> < >= <= == !=`), logical (`&& || !`) and assignment (`= += -= …`)." },
         { type: "code", code: `int a = 17, b = 5;\nSystem.out.println(a + b);  // 22\nSystem.out.println(a - b);  // 12\nSystem.out.println(a * b);  // 85\nSystem.out.println(a / b);  // 3  (integer division!)\nSystem.out.println(a % b);  // 2  (remainder)` },
         { type: "note", tone: "exam", text: "Integer division truncates: `17 / 5` gives `3`, not `3.4`. To get decimals, make one operand a `double`: `17.0 / 5` → `3.4`. The `%` (modulo) operator gives the remainder — favourite in ICSE output questions." },
-        { type: "code", code: `int x = 10;\nx++;            // x becomes 11\n++x;            // pre-increment also 11\nint y = x++;    // y gets OLD value 11, then x becomes 12` },
+        { type: "code", code: `int x = 10;\nx++;            // x becomes 11\n++x;            // pre-increment also 11\nint y = x++;    // y gets OLD value 12, then x becomes 13` },
         { type: "keypoint", text: "`==` compares values; `=` assigns. Never confuse them. `&&` is AND (both true), `||` is OR (either true), `!` negates." },
         { type: "list", items: [
           "Relational operators always return `boolean`: `a > b` → `true` or `false`.",
@@ -63,7 +63,7 @@ export const lessonsP1 = [
     lessons: [
       L("if, else and switch", [
         { type: "paragraph", text: "**Conditional statements** let your program make decisions. `if` runs a block only when its condition is `true`; `else` covers the remaining case." },
-        { type: "code", code: `int marks = 72;\nif (marks >= 90) {\n    System.out.println(\"Distinction\");\n} else if (marks >= 75) {\n    System.out.println(\"Merit\");\n} else if (marks >= 33) {\n    System.out.println(\"Pass\");\n} else {\n    System.out.println(\"Keep trying!\");\n}` },
+        { type: "code", code: `int marks = 78;\nif (marks >= 90) {\n    System.out.println(\"Distinction\");\n} else if (marks >= 75) {\n    System.out.println(\"Merit\");\n} else if (marks >= 33) {\n    System.out.println(\"Pass\");\n} else {\n    System.out.println(\"Keep trying!\");\n}` },
         { type: "output", output: `Merit` },
         { type: "paragraph", text: "`switch` is cleaner when one variable is compared against many fixed values:" },
         { type: "code", code: `int day = 3;\nswitch (day) {\n    case 1: System.out.println(\"Monday\"); break;\n    case 2: System.out.println(\"Tuesday\"); break;\n    case 3: System.out.println(\"Wednesday\"); break;\n    default: System.out.println(\"Other day\");\n}` },
@@ -115,6 +115,41 @@ export const lessonsP1 = [
         ]},
         { type: "keypoint", text: "The method call must match the declaration exactly — right number, order and types of arguments. A `static` method can be called without creating an object (you'll meet `static` properly in Constructors & beyond)." },
         { type: "note", tone: "exam", text: "ICSE program questions love 'define a method that…' — practise writing methods that accept parameters, compute and return values. Keep method names meaningful." },
+      ]),
+      L("Static methods, call by value and scope", [
+        { type: "paragraph", text: "A **static** method belongs to the CLASS, not to any one object — you call it without creating an instance. That is why `Math.sqrt(16)` and even `main` itself work without an object." },
+        { type: "code", code: `class Calculator {
+    static int square(int n) {
+        return n * n;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        int r = Calculator.square(7);  // no object needed!
+        System.out.println(r);          // 49
+    }
+}` },
+        { type: "output", output: `49` },
+        { type: "paragraph", text: "Java passes **primitive** arguments **by value**: the method receives a COPY. Changing the parameter inside the method never changes the caller's variable." },
+        { type: "code", code: `static void change(int x) {
+    x = x * 10;
+}
+
+public static void main(String[] args) {
+    int a = 5;
+    change(a);
+    System.out.println(a);   // still 5!
+}` },
+        { type: "output", output: `5` },
+        { type: "list", items: [
+          "**Formal parameters** are the names in the declaration; **actual arguments** are the values you pass at the call.",
+          "A method that always returns the same output for the same input and changes nothing else is called **pure** — pure methods are easy to test and debug.",
+          "**Scope** = where a variable is visible. A variable declared inside a method (a *local variable*) only lives until that method ends — its **lifetime** ends there too.",
+          "Variables declared in a `for` loop header only exist inside that loop.",
+        ]},
+        { type: "keypoint", text: "`static` methods can only use other static members directly — an instance method needs an object, a static method does not." },
+        { type: "note", tone: "exam", text: "ICSE asks 'what is the output' on call-by-value tricks: the caller's variable NEVER changes when you pass an int, double, char or boolean to a method." },
       ]),
     ],
   },

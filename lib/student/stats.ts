@@ -55,7 +55,7 @@ export async function getDashboardStats(
         .from("exam_attempts")
         .select("total_score")
         .eq("student_id", studentId)
-        .in("status", ["submitted", "evaluated"]),
+        .in("status", ["submitted", "under_evaluation", "evaluation_completed", "result_published", "evaluated"]),
     ]);
 
   const xp = (xpRes.data ?? []).reduce((sum, e) => sum + (e.amount ?? 0), 0);
@@ -109,7 +109,7 @@ export async function getRecentStudentActivity(studentId: string | null): Promis
     admin.from("exam_attempts")
       .select("id", { count: "exact", head: true })
       .eq("student_id", studentId)
-      .eq("status", "submitted"),
+      .in("status", ["submitted", "under_evaluation"]),
     admin.from("coding_submissions")
       .select("id, coding_questions(title)")
       .eq("student_id", studentId)
@@ -122,7 +122,8 @@ export async function getRecentStudentActivity(studentId: string | null): Promis
   const examTitle = (e: typeof rows[number]["exams"]) => examRow(e)?.title ?? "Exam";
   const examMax = (e: typeof rows[number]["exams"]) => examRow(e)?.total_marks ?? null;
   const first = rows[0];
-  const resultRow = rows.find((r) => r.status === "evaluated" || (r.total_score !== null));
+  const SCORED = new Set(["evaluated", "evaluation_completed", "result_published"]);
+  const resultRow = rows.find((r) => SCORED.has(r.status) || r.total_score !== null);
 
   const codingRows = (codingSubs.data ?? []) as Array<{ id: string; coding_questions: { title: string } | { title: string }[] | null }>;
   const lastCodingRow = codingRows[0];

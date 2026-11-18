@@ -40,17 +40,39 @@ export default async function GrowthPage() {
 
       {!hasData ? (
         <RevealItem>
-          <EmptyState
-            icon={TrendingUp}
-            title="Your growth story begins now"
-            description="Finish a lesson, answer a practice question, sit an exam or submit code — this page will chart your progress, highlight weak topics and suggest what to revise next."
-          >
-            <div className="mt-2 flex flex-wrap justify-center gap-2">
-              <Link href="/learn" className="rounded-full bg-lav-100 px-4 py-2 text-sm font-extrabold text-lav-600">Start learning</Link>
-              <Link href="/practice" className="rounded-full bg-sun-100 px-4 py-2 text-sm font-extrabold text-ink-600">Try practice</Link>
-              <Link href="/coding" className="rounded-full bg-mint-100 px-4 py-2 text-sm font-extrabold text-mint-600">Code a challenge</Link>
+          <div className="mx-auto flex w-full max-w-2xl flex-col gap-8">
+            <EmptyState
+              icon={TrendingUp}
+              title="Your growth story begins now"
+              description="Every lesson, practice answer, exam and program you complete feeds this dashboard — XP, accuracy, milestones and weak spots, all real."
+            />
+            <Card className="p-6">
+              <h2 className="text-sm font-extrabold uppercase tracking-widest text-ink-400">How your progress builds</h2>
+              <ul className="mt-3 grid gap-3 sm:grid-cols-2">
+                {[
+                  { icon: BookOpen, label: "Lessons", text: "Finish a lesson → +25 XP and a completion mark.", href: "/learn" },
+                  { icon: Target, label: "Practice", text: "Answer questions → accuracy per topic and XP.", href: "/practice" },
+                  { icon: ClipboardList, label: "Exams", text: "Sit a paper → scores, averages and trends.", href: "/exams" },
+                  { icon: Code2, label: "Coding", text: "Submit solutions → reviewed marks and XP.", href: "/coding" },
+                ].map((s) => (
+                  <li key={s.label}>
+                    <Link href={s.href} className="flex h-full items-start gap-3 rounded-2xl border border-cream-300/50 bg-cream-100/60 p-4 transition-colors hover:border-lav-300/60">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-lav-100 text-lav-400"><s.icon className="h-5 w-5" /></span>
+                      <span>
+                        <span className="block text-sm font-extrabold text-ink-700">{s.label}</span>
+                        <span className="block text-xs font-semibold text-ink-400">{s.text}</span>
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+            <div className="flex flex-wrap justify-center gap-2">
+              <Link href="/learn" className="rounded-full bg-lav-400 px-5 py-2.5 text-sm font-extrabold text-white">Start your first lesson</Link>
+              <Link href="/practice" className="rounded-full bg-sun-100 px-5 py-2.5 text-sm font-extrabold text-ink-600">Try practice</Link>
+              <Link href="/playground" className="rounded-full bg-mint-100 px-5 py-2.5 text-sm font-extrabold text-mint-600">Open the Playground</Link>
             </div>
-          </EmptyState>
+          </div>
         </RevealItem>
       ) : (
         <>

@@ -1,0 +1,344 @@
+[
+  {
+    "route": "dashboard",
+    "path": "/dashboard",
+    "viewport": "desktop",
+    "status": 200,
+    "overflow": false,
+    "consoleErrors": [],
+    "screenshot": "desktop/dashboard.png"
+  },
+  {
+    "check": "desktop/dashboard",
+    "robot": true,
+    "robotBox": {
+      "x": 1321,
+      "y": 811,
+      "w": 126,
+      "h": 144
+    },
+    "hits": []
+  },
+  {
+    "route": "learn",
+    "path": "/learn",
+    "viewport": "desktop",
+    "status": 200,
+    "overflow": false,
+    "consoleErrors": [],
+    "screenshot": "desktop/learn.png"
+  },
+  {
+    "check": "desktop/learn",
+    "robot": true,
+    "robotBox": {
+      "x": 1037,
+      "y": 910,
+      "w": 126,
+      "h": 144
+    },
+    "hits": [
+      "A.block h-full"
+    ]
+  },
+  {
+    "route": "learn-topic",
+    "path": "/learn/e9066c5f-3ad0-4748-8bd1-c9fb012cf8d3",
+    "viewport": "desktop",
+    "status": 200,
+    "overflow": false,
+    "consoleErrors": [],
+    "screenshot": "desktop/learn-topic.png"
+  },
+  {
+    "check": "desktop/learn-topic",
+    "robot": true,
+    "robotBox": {
+      "x": 1037,
+      "y": 910,
+      "w": 126,
+      "h": 144
+    },
+    "hits": []
+  },
+  {
+    "route": "lesson",
+    "path": "/learn/lesson/733ef3af-7d87-4301-a837-f3c680e2841b",
+    "viewport": "desktop",
+    "status": 200,
+    "overflow": false,
+    "consoleErrors": [],
+    "screenshot": "desktop/lesson.png"
+  },
+  {
+    "check": "desktop/lesson",
+    "robot": true,
+    "robotBox": {
+      "x": 1188,
+      "y": 869,
+      "w": 126,
+      "h": 144
+    },
+    "hits": []
+  },
+  {
+    "route": "practice",
+    "path": "/practice",
+    "viewport": "desktop",
+    "status": 200,
+    "overflow": false,
+    "consoleErrors": [],
+    "screenshot": "desktop/practice.png"
+  },
+  {
+    "check": "desktop/practice",
+    "robot": true,
+    "robotBox": {
+      "x": 1037,
+      "y": 910,
+      "w": 126,
+      "h": 144
+    },
+    "hits": [
+      "A.block h-full",
+      "A.block h-full"
+    ]
+  },
+  {
+    "route": "practice-session",
+    "path": "/practice/session?topic=all",
+    "viewport": "desktop",
+    "status": 200,
+    "overflow": false,
+    "consoleErrors": [],
+    "screenshot": "desktop/practice-session.png"
+  },
+  {
+    "check": "desktop/practice-session",
+    "robot": true,
+    "robotBox": {
+      "x": 1037,
+      "y": 910,
+      "w": 126,
+      "h": 144
+    },
+    "hits": []
+  },
+  {
+    "route": "playground",
+    "path": "/playground",
+    "viewport": "desktop",
+    "status": 200,
+    "overflow": false,
+    "consoleErrors": [],
+    "screenshot": "desktop/playground.png"
+  },
+  {
+    "check": "desktop/playground",
+    "robot": true,
+    "robotBox": {
+      "x": 1037,
+      "y": 910,
+      "w": 126,
+      "h": 144
+    },
+    "hits": []
+  },
+  {
+    "route": "growth",
+    "path": "/growth",
+    "viewport": "desktop",
+    "status": 200,
+    "overflow": false,
+    "consoleErrors": [],
+    "screenshot": "desktop/growth.png"
+  },
+  {
+    "check": "desktop/growth",
+    "robot": true,
+    "robotBox": {
+      "x": 1139,
+      "y": 804,
+      "w": 126,
+      "h": 144
+    },
+    "hits": []
+  },
+  {
+    "route": "coding-list",
+    "path": "/coding",
+    "viewport": "desktop",
+    "status": 200,
+    "overflow": false,
+    "consoleErrors": [],
+    "screenshot": "desktop/coding-list.png"
+  },
+  {
+    "check": "desktop/coding-list",
+    "robot": true,
+    "robotBox": {
+      "x": 1037,
+      "y": 910,
+      "w": 126,
+      "h": 144
+    },
+    "hits": [
+      "A.block h-full",
+      "A.block h-full"
+    ]
+  },
+  {
+    "route": "coding-question",
+    "path": "/coding/65437800-ca51-4e40-b78b-5a4645987fdc",
+    "viewport": "desktop",
+    "status": 200,
+    "overflow": false,
+    "consoleErrors": [],
+    "screenshot": "desktop/coding-question.png"
+  },
+  {
+    "check": "desktop/coding-question",
+    "robot": true,
+    "robotBox": {
+      "x": 1068,
+      "y": 969,
+      "w": 126,
+      "h": 144
+    },
+    "hits": [
+      "BUTTON.flex w-full items-center gap-2"
+    ]
+  },
+  {
+    "route": "exams",
+    "path": "/exams",
+    "viewport": "desktop",
+    "status": 200,
+    "overflow": false,
+    "consoleErrors": [],
+    "screenshot": "desktop/exams.png"
+  },
+  {
+    "check": "desktop/exams",
+    "robot": true,
+    "robotBox": {
+      "x": 1037,
+      "y": 910,
+      "w": 126,
+      "h": 144
+    },
+    "hits": []
+  },
+  {
+    "check": "desktop/dashboard-scrolled",
+    "robot": true,
+    "robotBox": {
+      "x": 1321,
+      "y": 811,
+      "w": 126,
+      "h": 144
+    },
+    "hits": []
+  },
+  {
+    "route": "growth-empty",
+    "path": "/growth",
+    "viewport": "desktop",
+    "status": 200,
+    "screenshot": "states/growth-empty.png",
+    "note": "fresh student, no activity"
+  },
+  {
+    "route": "dashboard",
+    "path": "/dashboard",
+    "viewport": "mobile",
+    "status": 200,
+    "overflow": false,
+    "consoleErrors": [],
+    "screenshot": "mobile/dashboard.png"
+  },
+  {
+    "check": "mobile/dashboard",
+    "robot": true,
+    "robotBox": {
+      "x": 281,
+      "y": 754,
+      "w": 98,
+      "h": 112
+    },
+    "hits": [
+      "A.",
+      "A."
+    ]
+  },
+  {
+    "route": "practice",
+    "path": "/practice",
+    "viewport": "mobile",
+    "status": 200,
+    "overflow": false,
+    "consoleErrors": [],
+    "screenshot": "mobile/practice.png"
+  },
+  {
+    "check": "mobile/practice",
+    "robot": true,
+    "robotBox": {
+      "x": 281,
+      "y": 754,
+      "w": 98,
+      "h": 112
+    },
+    "hits": [
+      "BUBBLE>A",
+      "A.block h-full",
+      "A.block h-full"
+    ]
+  },
+  {
+    "route": "playground",
+    "path": "/playground",
+    "viewport": "mobile",
+    "status": 200,
+    "overflow": false,
+    "consoleErrors": [],
+    "screenshot": "mobile/playground.png"
+  },
+  {
+    "check": "mobile/playground",
+    "robot": true,
+    "robotBox": {
+      "x": 281,
+      "y": 754,
+      "w": 98,
+      "h": 112
+    },
+    "hits": [
+      "DIV.monaco-editor no-user-select  ",
+      "BUBBLE>DIV"
+    ]
+  },
+  {
+    "route": "growth",
+    "path": "/growth",
+    "viewport": "mobile",
+    "status": 200,
+    "overflow": false,
+    "consoleErrors": [],
+    "screenshot": "mobile/growth.png"
+  },
+  {
+    "check": "mobile/growth",
+    "robot": true,
+    "robotBox": {
+      "x": 281,
+      "y": 754,
+      "w": 98,
+      "h": 112
+    },
+    "hits": [
+      "A.flex h-full items-start gap-3 ",
+      "A.flex h-full items-start gap-3 "
+    ]
+  }
+]

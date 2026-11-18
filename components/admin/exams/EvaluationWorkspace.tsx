@@ -62,6 +62,15 @@ export function EvaluationWorkspace({ data }: { data: EvaluationWorkspaceData })
   const [publishMsg, setPublishMsg] = useState<string | null>(null);
   const [publishing, setPublishing] = useState(false);
 
+  // A question counts as evaluated when it was saved in this session OR an
+  // evaluation row already exists server-side (auto-graded MCQs, saves made
+  // before this component mounted, or by another admin). The server remains
+  // the authority — publishResultAction re-validates independently.
+  const serverEvaluated = useMemo(
+    () => new Set(evaluations.map((e) => e.paper_question_id)),
+    [evaluations]
+  );
+
   // Optional questions the student did not select are excluded from scoring.
   const hasGroups = (snapshot?.optional_groups ?? []).length > 0;
   const selectedSet = useMemo(() => new Set(selectedQuestionIds ?? []), [selectedQuestionIds]);
@@ -84,7 +93,9 @@ export function EvaluationWorkspace({ data }: { data: EvaluationWorkspaceData })
     const m = Number(evals[q.id]?.marks);
     return sum + (Number.isFinite(m) ? m : 0);
   }, 0);
-  const evaluatedCount = requiredQuestions.filter((q) => evals[q.id]?.saved).length;
+  const evaluatedCount = requiredQuestions.filter(
+    (q) => evals[q.id]?.saved || serverEvaluated.has(q.id)
+  ).length;
   const allEvaluated = requiredQuestions.length > 0 && evaluatedCount === requiredQuestions.length;
 
   const q = flatQuestions[currentIdx];

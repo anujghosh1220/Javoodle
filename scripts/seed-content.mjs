@@ -12,6 +12,7 @@
  * Usage:  node scripts/seed-content.mjs
  */
 import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { lessonsP1 } from "./curriculum/lessons-p1.mjs";
 import { lessonsP2 } from "./curriculum/lessons-p2.mjs";
 import { lessonsP3 } from "./curriculum/lessons-p3.mjs";
@@ -57,11 +58,44 @@ async function api(path, opts = {}) {
 
 const norm = (s) => (s ?? "").replace(/\s+/g, " ").trim().toLowerCase();
 
+// Canonical JSON for comparing jsonb (Postgres reorders object keys).
+const canonDeep = (v) =>
+  Array.isArray(v) ? `[${v.map(canonDeep).join(",")}]`
+  : v && typeof v === "object"
+    ? `{${Object.keys(v).sort().map((k) => `${JSON.stringify(k)}:${canonDeep(v[k])}`).join(",")}}`
+    : JSON.stringify(v);
+
+// Parse topic tuples from supabase/seed.sql — single source of truth for the syllabus list.
+function parseSeedTopics() {
+  const sql = readFileSync(join(import.meta.dirname, "..", "supabase", "seed.sql"), "utf8");
+  const out = [];
+  const re = /\('((?:[^'\\]|\\.)*)',\s*(\d+),\s*(\d+),\s*'((?:[^'\\]|\\.)*)'\)/g;
+  let m;
+  while ((m = re.exec(sql))) {
+    out.push({ name: m[1].replace(/\\'/g, "'"), phase: +m[2], order_index: +m[3], description: m[4].replace(/\\'/g, "'") });
+  }
+  return out;
+}
+
 async function main() {
   console.log("== Javoodle curriculum seed ==\n");
 
-  const topics = await api("topics?select=id,name,phase,order_index");
+  // ---------- 0. Topics (upsert from seed.sql) ----------
+  const seedTopics = parseSeedTopics();
+  let topics = await api("topics?select=id,name,phase,order_index,description");
   const topicByName = new Map(topics.map((t) => [t.name, t]));
+  for (const t of seedTopics) {
+    const ex = topicByName.get(t.name);
+    if (!ex) {
+      const [row] = await api("topics", { method: "POST", body: JSON.stringify(t) });
+      topics.push(row);
+      topicByName.set(t.name, row);
+      console.log(`+ topic created: ${t.name}`);
+    } else if (ex.phase !== t.phase || ex.order_index !== t.order_index || ex.description !== t.description) {
+      await api(`topics?id=eq.${ex.id}`, { method: "PATCH", body: JSON.stringify({ phase: t.phase, order_index: t.order_index, description: t.description }) });
+      console.log(`~ topic updated: ${t.name} (order ${ex.order_index} → ${t.order_index})`);
+    }
+  }
   console.log(`topics: ${topics.length}`);
 
   // ---------- 1. Playground sandbox question ----------
@@ -90,15 +124,24 @@ async function main() {
   }
 
   // ---------- 2. Lessons ----------
-  const existingLessons = await api("lessons?select=id,title,topic_id");
-  const lessonKeys = new Set(existingLessons.map((l) => `${l.topic_id}|${norm(l.title)}`));
+  const existingLessons = await api("lessons?select=id,title,topic_id,blocks,order_index");
+  const lessonByKey = new Map(existingLessons.map((l) => [`${l.topic_id}|${norm(l.title)}`, l]));
   let lessonInserts = [];
+  const lessonUpdateJobs = [];
   const allLessonData = [...lessonsP1, ...lessonsP2, ...lessonsP3];
   for (const group of allLessonData) {
     const topic = topicByName.get(group.topic);
     if (!topic) { console.warn(`! topic not found: ${group.topic}`); continue; }
     group.lessons.forEach((les, i) => {
-      if (lessonKeys.has(`${topic.id}|${norm(les.title)}`)) return;
+      const key = `${topic.id}|${norm(les.title)}`;
+      const ex = lessonByKey.get(key);
+      if (ex) {
+        // Refresh content when the source lesson changed (safe: progress keys on lesson id).
+        if (canonDeep(ex.blocks) !== canonDeep(les.blocks) || ex.order_index !== i + 1) {
+          lessonUpdateJobs.push(api(`lessons?id=eq.${ex.id}`, { method: "PATCH", body: JSON.stringify({ blocks: les.blocks, order_index: i + 1, published: true }) }));
+        }
+        return;
+      }
       lessonInserts.push({
         topic_id: topic.id,
         title: les.title,
@@ -108,13 +151,17 @@ async function main() {
       });
     });
   }
+  if (lessonUpdateJobs.length) {
+    await Promise.all(lessonUpdateJobs);
+    console.log(`✓ ${lessonUpdateJobs.length} lessons refreshed`);
+  }
   if (lessonInserts.length) {
     for (let i = 0; i < lessonInserts.length; i += 50) {
       await api("lessons", { method: "POST", body: JSON.stringify(lessonInserts.slice(i, i + 50)) });
     }
     console.log(`✓ ${lessonInserts.length} lessons inserted`);
   } else {
-    console.log("• all lessons already present");
+    console.log("• no new lessons");
   }
 
   // ---------- 3. Practice questions ----------

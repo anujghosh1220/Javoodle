@@ -16,11 +16,12 @@ insert into public.topics (name, phase, order_index, description) values
   -- Month 2 — Intermediate
   ('Constructors',                            2, 1,  'Default & parameterized constructors, this keyword'),
   ('Method & Constructor Overloading',        2, 2,  'Compile-time polymorphism'),
-  ('Library Classes',                         2, 3,  'Math, StringBuilder, wrapper classes, Scanner'),
-  ('Strings',                                 2, 4,  'String class methods, immutability, comparison'),
-  ('Arrays',                                  2, 5,  'One & two dimensional arrays, traversal'),
-  ('Searching & Sorting',                     2, 6,  'Linear/binary search, bubble & selection sort'),
-  ('Intermediate Programming Problems',       2, 7,  'Board-style program design'),
+  ('Encapsulation',                           2, 3,  'Access specifiers, data hiding, getters/setters, scope'),
+  ('Library Classes',                         2, 4,  'Math, StringBuilder, wrapper classes, Scanner'),
+  ('Strings',                                 2, 5,  'String class methods, immutability, comparison'),
+  ('Arrays',                                  2, 6,  'One & two dimensional arrays, traversal'),
+  ('Searching & Sorting',                     2, 7,  'Linear/binary search, bubble & selection sort'),
+  ('Intermediate Programming Problems',       2, 8,  'Board-style program design'),
   -- Month 3 — Revision & exams
   ('Full Syllabus Revision',                  3, 1,  'Mixed concept drills'),
   ('Previous Year Questions',                 3, 2,  'PYQ practice by topic'),

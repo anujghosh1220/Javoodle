@@ -64,7 +64,7 @@ export async function getGrowthData(studentId: string | null): Promise<GrowthDat
     admin.from("exam_attempts")
       .select("status,total_score,started_at,submitted_at,exams(title,total_marks)")
       .eq("student_id", studentId)
-      .in("status", ["submitted", "evaluated"])
+      .in("status", ["submitted", "under_evaluation", "evaluation_completed", "result_published", "evaluated"])
       .order("started_at", { ascending: false })
       .limit(20),
     admin.from("coding_submissions")

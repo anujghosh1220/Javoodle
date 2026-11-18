@@ -414,7 +414,7 @@ export class MascotBrain {
     const t = y - this.hh;
     const b = y;
     for (const o of this.obsCache) {
-      if (r > o.x - 6 && l < o.x + o.w + 6 && b > o.y - 6 && t < o.y + o.h + 6) return true;
+      if (r > o.x - 10 && l < o.x + o.w + 10 && b > o.y - 10 && t < o.y + o.h + 10) return true;
     }
     return false;
   }

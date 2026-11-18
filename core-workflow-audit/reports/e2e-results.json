@@ -1,0 +1,155 @@
+{
+  "results": [
+    {
+      "step": "admin login",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "step": "exam created",
+      "status": "PASS",
+      "note": "1bb0b52b-bbf1-4947-829a-5c620ee21d43"
+    },
+    {
+      "step": "questions saved",
+      "status": "PASS",
+      "note": "[{\"question_number\":\"1\",\"marks\":5,\"question_type\":\"mcq\"},{\"question_number\":\"2\",\"marks\":15,\"question_type\":\"program\"},{\"question_number\":\"3\",\"marks\":10,\"question_type\":\"theory\"}]"
+    },
+    {
+      "step": "save msg",
+      "status": "INFO",
+      "note": "Extracts the uploaded paper locally (no external AI) into an editable draft. Nothing is saved until you confirm."
+    },
+    {
+      "step": "publish msg",
+      "status": "INFO",
+      "note": "published | Unpublish | Exam published. | TOTAL MARKS"
+    },
+    {
+      "step": "exam published",
+      "status": "PASS",
+      "note": "status=published"
+    },
+    {
+      "step": "student exams page",
+      "status": "INFO",
+      "note": "url=http://localhost:3217/exams :: Javoodle | Learn | Practice | Coding Lab | Playground | Exams | Growth | Examinations |  | Your online exams will appear here when your teacher publishes them. |  | Javoodl"
+    },
+    {
+      "step": "attempt started",
+      "status": "PASS",
+      "note": "http://localhost:3217/exams/1bb0b52b-bbf1-4947-829a-5c620ee21d43/take"
+    },
+    {
+      "step": "answers entered + flagged",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "step": "refresh persistence",
+      "status": "PASS",
+      "note": "page reloaded"
+    },
+    {
+      "step": "exam submitted",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "step": "attempt id",
+      "status": "PASS",
+      "note": "a16778ea-7bd8-43c2-9a98-f6c47955c441"
+    },
+    {
+      "step": "attempt submitted (api)",
+      "status": "PASS",
+      "note": "status=under_evaluation"
+    },
+    {
+      "step": "eval progress (before)",
+      "status": "INFO",
+      "note": "Evaluate all 3 questions to complete (1 done)."
+    },
+    {
+      "step": "save Q2",
+      "status": "INFO",
+      "note": ""
+    },
+    {
+      "step": "save Q3",
+      "status": "INFO",
+      "note": ""
+    },
+    {
+      "step": "eval progress (final)",
+      "status": "WARN",
+      "note": ""
+    },
+    {
+      "step": "publish button state",
+      "status": "PASS",
+      "note": "enabled"
+    },
+    {
+      "step": "evaluations saved",
+      "status": "PASS",
+      "note": "rows=3"
+    },
+    {
+      "step": "final attempt state",
+      "status": "PASS",
+      "note": "{\"status\":\"result_published\",\"total_score\":28,\"percentage\":93.33}"
+    },
+    {
+      "step": "final score",
+      "status": "PASS",
+      "note": "{\"id\":\"a16778ea-7bd8-43c2-9a98-f6c47955c441\",\"status\":\"result_published\",\"total_score\":28,\"percentage\":93.33}"
+    },
+    {
+      "step": "result page shows score",
+      "status": "PASS",
+      "note": "Javoodle | Learn | Practice | Coding Lab | Playground | Exams | Growth | Back to Exams |  | JAVOODLE E2E VALIDATION EXAM · COMPUTER APPLIC"
+    },
+    {
+      "step": "result stable on refresh",
+      "status": "PASS",
+      "note": "{\"total_score\":28,\"status\":\"result_published\"}"
+    },
+    {
+      "step": "timer attempt created",
+      "status": "PASS",
+      "note": "23d4f14f-699c-436d-994c-ef68c983edf7"
+    },
+    {
+      "step": "timer auto-submit",
+      "status": "PASS",
+      "note": "status=submitted"
+    },
+    {
+      "step": "post-expiry refresh stable",
+      "status": "PASS",
+      "note": "status=under_evaluation"
+    },
+    {
+      "step": "no double-submit",
+      "status": "PASS",
+      "note": "{\"status\":\"under_evaluation\",\"total_score\":0}"
+    },
+    {
+      "step": "unauth admin blocked",
+      "status": "PASS",
+      "note": "http://localhost:3217/admin/login"
+    },
+    {
+      "step": "student admin blocked",
+      "status": "PASS",
+      "note": "http://localhost:3217/admin/login"
+    },
+    {
+      "step": "cleanup",
+      "status": "PASS",
+      "note": "exam + attempt removed"
+    }
+  ],
+  "errors": []
+}

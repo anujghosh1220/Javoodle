@@ -1,0 +1,97 @@
+[
+  {
+    "screenshot": "desktop/admin-dashboard.png",
+    "route": "admin-dashboard",
+    "viewport": "1440x1000"
+  },
+  {
+    "screenshot": "desktop/admin-evaluation-done.png",
+    "route": "admin-evaluation-done",
+    "viewport": "1440x1000"
+  },
+  {
+    "screenshot": "desktop/admin-evaluation-filled.png",
+    "route": "admin-evaluation-filled",
+    "viewport": "1440x1000"
+  },
+  {
+    "screenshot": "desktop/admin-evaluation.png",
+    "route": "admin-evaluation",
+    "viewport": "1440x1000"
+  },
+  {
+    "screenshot": "desktop/admin-login.png",
+    "route": "admin-login",
+    "viewport": "1440x1000"
+  },
+  {
+    "screenshot": "desktop/exam-after-refresh.png",
+    "route": "exam-after-refresh",
+    "viewport": "1440x1000"
+  },
+  {
+    "screenshot": "desktop/exam-answered-palette.png",
+    "route": "exam-answered-palette",
+    "viewport": "1440x1000"
+  },
+  {
+    "screenshot": "desktop/exam-create-form.png",
+    "route": "exam-create-form",
+    "viewport": "1440x1000"
+  },
+  {
+    "screenshot": "desktop/exam-detail.png",
+    "route": "exam-detail",
+    "viewport": "1440x1000"
+  },
+  {
+    "screenshot": "desktop/exam-editor-empty.png",
+    "route": "exam-editor-empty",
+    "viewport": "1440x1000"
+  },
+  {
+    "screenshot": "desktop/exam-editor-questions.png",
+    "route": "exam-editor-questions",
+    "viewport": "1440x1000"
+  },
+  {
+    "screenshot": "desktop/exam-published.png",
+    "route": "exam-published",
+    "viewport": "1440x1000"
+  },
+  {
+    "screenshot": "desktop/exam-q2-program.png",
+    "route": "exam-q2-program",
+    "viewport": "1440x1000"
+  },
+  {
+    "screenshot": "desktop/exam-q3-paragraph.png",
+    "route": "exam-q3-paragraph",
+    "viewport": "1440x1000"
+  },
+  {
+    "screenshot": "desktop/exam-runner-start.png",
+    "route": "exam-runner-start",
+    "viewport": "1440x1000"
+  },
+  {
+    "screenshot": "desktop/exam-submitted.png",
+    "route": "exam-submitted",
+    "viewport": "1440x1000"
+  },
+  {
+    "screenshot": "desktop/student-exams-after.png",
+    "route": "student-exams-after",
+    "viewport": "1440x1000"
+  },
+  {
+    "screenshot": "desktop/student-exams-list.png",
+    "route": "student-exams-list",
+    "viewport": "1440x1000"
+  },
+  {
+    "screenshot": "desktop/student-result.png",
+    "route": "student-result",
+    "viewport": "1440x1000"
+  }
+]

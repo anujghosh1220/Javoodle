@@ -43,3 +43,7 @@ next-env.d.ts
 # Devin local config
 .devin/
 .test-token
+
+# local test credentials & artifacts
+.e2e-admin.json
+nul

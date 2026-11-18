@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Pause, Play, Volume2, VolumeX } from "lucide-react";
+import { Pause, Play, Volume2, VolumeX, ChevronDown, ChevronUp } from "lucide-react";
 import { Robot, type RobotMood } from "./Robot";
 import { MascotBrain } from "@/lib/mascot/controller";
 import type { AnimState, InterestPoint, PoseFrame } from "@/lib/mascot/types";
@@ -67,11 +67,35 @@ const OBSTACLE_SELECTOR = [
   '[contenteditable="true"]', 'nav', 'header',
   // content regions — cards, sections, panels, forms
   'main section', 'main article', 'main header', 'main footer',
-  'main .rounded-card', 'main [data-keep-clear]', 'form',
+  'main .rounded-card', 'main .rounded-2xl', 'main .rounded-3xl',
+  'main [data-keep-clear]', 'form',
   // editor + overlays
   '.monaco-editor', '[role="dialog"]', '[role="menu"]', '[role="listbox"]',
   '[data-radix-popper-content-wrapper]', '[data-keep-clear]',
 ].join(", ");
+
+/** Inflated keep-out rects for anything the companion must not cover. */
+function collectObstacles(): { x: number; y: number; w: number; h: number }[] {
+  const out: { x: number; y: number; w: number; h: number }[] = [];
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  for (const el of Array.from(document.querySelectorAll<HTMLElement>(OBSTACLE_SELECTOR))) {
+    if (el.closest("[data-companion]") || el.closest("[data-companion-controls]")) continue;
+    const r = el.getBoundingClientRect();
+    if (r.width < 8 || r.height < 8) continue;
+    if (r.bottom < 0 || r.right < 0 || r.top > vh || r.left > vw) continue;
+    const cs = getComputedStyle(el);
+    if (cs.visibility === "hidden" || cs.display === "none") continue;
+    // inflate so the robot + bubble keep real clearance, not just edge contact
+    out.push({ x: r.left - 10, y: r.top - 10, w: r.width + 20, h: r.height + 20 });
+    if (out.length > 160) break;
+  }
+  return out;
+}
+
+function rectHitsObstacle(x: number, y: number, w: number, h: number, obstacles: { x: number; y: number; w: number; h: number }[]): boolean {
+  return obstacles.some((o) => x < o.x + o.w && x + w > o.x && y < o.y + o.h && y + h > o.y);
+}
 const INTEREST_SELECTOR = 'main nav a[href], main a[href], [data-robot-interest]';
 
 type SvgParts = Partial<Record<string, SVGGElement | null>>;
@@ -81,6 +105,7 @@ const PREFS_KEY = "javoodle.companion.prefs";
 interface Prefs {
   roam: boolean;
   hidden: boolean;
+  dockOpen: boolean;
 }
 
 function personalize(msg: string, m: CompanionMemory): string {
@@ -94,18 +119,18 @@ function personalize(msg: string, m: CompanionMemory): string {
 function loadPrefs(): Prefs {
   try {
     const raw = localStorage.getItem(PREFS_KEY);
-    if (raw) return { roam: true, hidden: false, ...JSON.parse(raw) };
+    if (raw) return { roam: true, hidden: false, dockOpen: true, ...JSON.parse(raw) };
   } catch {
     /* ignore */
   }
-  return { roam: true, hidden: false };
+  return { roam: true, hidden: false, dockOpen: true };
 }
 
 export function RobotCompanion({ memory }: { memory?: CompanionMemory }) {
   const pathname = usePathname();
   const [mood, setMood] = useState<RobotMood>("happy");
   const [bubble, setBubble] = useState<string | null>(null);
-  const [prefs, setPrefs] = useState<Prefs>({ roam: true, hidden: false });
+  const [prefs, setPrefs] = useState<Prefs>({ roam: true, hidden: false, dockOpen: true });
   const [reducedMotion, setReducedMotion] = useState(false);
 
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -124,6 +149,8 @@ export function RobotCompanion({ memory }: { memory?: CompanionMemory }) {
   const robotH = useRef(128);
   const quietRef = useRef(false);
   const bubbleLayout = useRef("");
+  const bubbleObsAt = useRef(0);
+  const bubbleObsCache = useRef<{ x: number; y: number; w: number; h: number }[]>([]);
   const partsRef = useRef<SvgParts>({});
   const pupilsRef = useRef<SVGGElement[]>([]);
   const brainRef = useRef<MascotBrain | null>(null);
@@ -143,21 +170,7 @@ export function RobotCompanion({ memory }: { memory?: CompanionMemory }) {
 
     const brain = new MascotBrain({
       viewport: () => ({ w: window.innerWidth, h: window.innerHeight }),
-      obstacles: () => {
-        const out: { x: number; y: number; w: number; h: number }[] = [];
-        const els = document.querySelectorAll<HTMLElement>(OBSTACLE_SELECTOR);
-        for (const el of Array.from(els)) {
-          if (el.closest("[data-companion]") || el.closest("[data-companion-controls]")) continue;
-          const r = el.getBoundingClientRect();
-          if (r.width < 8 || r.height < 8) continue;
-          if (r.bottom < 0 || r.right < 0 || r.top > window.innerHeight || r.left > window.innerWidth) continue;
-          const cs = getComputedStyle(el);
-          if (cs.visibility === "hidden" || cs.display === "none") continue;
-          out.push({ x: r.left, y: r.top, w: r.width, h: r.height });
-          if (out.length > 160) break;
-        }
-        return out;
-      },
+      obstacles: () => collectObstacles(),
       interests: () => {
         const out: InterestPoint[] = [];
         const els = document.querySelectorAll<HTMLElement>(INTEREST_SELECTOR);
@@ -193,28 +206,51 @@ export function RobotCompanion({ memory }: { memory?: CompanionMemory }) {
       const vw = window.innerWidth;
       const vh = window.innerHeight;
       const gap = 14;
-      const bx = Math.max(10, Math.min(p.x - W / 2, vw - W - 10));
-      const relX = bx - p.x;
-      let by = -(robotH.current * 0.9 + gap + H);
-      let side: "above" | "below" | "hidden" = "above";
-      if (p.y + by < 10) {
-        by = 12;
-        if (p.y + by + H > vh - 8) { side = "hidden"; }
-        else side = "below";
+      // obstacles are sampled at most every ~500ms — a cheap cache is fine here
+      const now = performance.now();
+      if (now - bubbleObsAt.current > 500) {
+        bubbleObsAt.current = now;
+        bubbleObsCache.current = collectObstacles();
       }
+      const obstacles = bubbleObsCache.current;
       const tail = bubbleTailRef.current;
-      const tailX = Math.max(14, Math.min(p.x - bx - 6, W - 26));
-      const key = `${relX}|${by}|${side}|${tailX}`;
+
+      // Candidate placements, in preference order. Each is [dx, dy] offset of
+      // the bubble's top-left relative to the robot's anchor (p.x, p.y).
+      const bx = Math.max(8, Math.min(p.x - W / 2, vw - W - 8));
+      const relX = bx - p.x;
+      const candidates: Array<{ relX: number; by: number; side: "above" | "below" | "left" | "right"; tailX: number; tailY: string; tailRot: string }> = [
+        { relX, by: -(robotH.current * 0.9 + gap + H), side: "above", tailX: Math.max(14, Math.min(p.x - bx - 6, W - 26)), tailY: "", tailRot: "translateX(-50%) rotate(45deg)" },
+        { relX, by: 12, side: "below", tailX: Math.max(14, Math.min(p.x - bx - 6, W - 26)), tailY: "-5px", tailRot: "translateX(-50%) rotate(225deg)" },
+        { relX: -(W + gap), by: -(robotH.current * 0.55), side: "left", tailX: W + 2, tailY: "", tailRot: "translateY(-50%) rotate(-45deg)" },
+        { relX: W + gap, by: -(robotH.current * 0.55), side: "right", tailX: -4, tailY: "", tailRot: "translateY(-50%) rotate(135deg)" },
+      ];
+
+      let chosen: (typeof candidates)[number] | null = null;
+      for (const c of candidates) {
+        const x = p.x + c.relX;
+        const y = p.y + c.by;
+        if (x < 8 || y < 8 || x + W > vw - 8 || y + H > vh - 8) continue;
+        if (!rectHitsObstacle(x, y, W, H, obstacles)) { chosen = c; break; }
+      }
+      const side = chosen ? chosen.side : "hidden";
+      const fRelX = chosen ? chosen.relX : relX;
+      const fBy = chosen ? chosen.by : -(robotH.current * 0.9 + gap + H);
+      const fTailX = chosen ? chosen.tailX : candidates[0].tailX;
+      const fTailY = chosen ? chosen.tailY : "";
+      const fTailRot = chosen ? chosen.tailRot : candidates[0].tailRot;
+
+      const key = `${fRelX}|${fBy}|${side}|${fTailX}|${fTailY}`;
       if (key === bubbleLayout.current) return;
       bubbleLayout.current = key;
-      bp.style.transform = `translate(${relX}px, ${by}px)`;
+      bp.style.transform = `translate(${fRelX}px, ${fBy}px)`;
       bp.style.visibility = side === "hidden" ? "hidden" : "visible";
       bp.dataset.side = side === "hidden" ? "above" : side;
       if (tail) {
-        tail.style.left = `${tailX}px`;
-        tail.style.top = side === "below" ? "-5px" : "";
-        tail.style.bottom = side === "above" ? "-5px" : "";
-        tail.style.transform = side === "below" ? "translateX(-50%) rotate(225deg)" : "translateX(-50%) rotate(45deg)";
+        tail.style.left = `${fTailX}px`;
+        tail.style.top = fTailY === "-5px" ? "-5px" : fTailY;
+        tail.style.bottom = fTailY === "" && side !== "left" && side !== "right" ? "-5px" : "";
+        tail.style.transform = fTailRot;
       }
     };
 
@@ -547,12 +583,33 @@ export function RobotCompanion({ memory }: { memory?: CompanionMemory }) {
           </div>
         </div>
       </div>
-      {/* controls dock */}
+      {/* controls dock — collapses to a single button */}
       <div data-companion-controls className="fixed bottom-3 left-3 z-50 flex items-center gap-2">
-        <span className="hidden rounded-full border border-cream-300/40 bg-cream-200/80 px-2 py-1 text-[10px] font-bold text-ink-400/80 shadow-md backdrop-blur-sm sm:block">
-          {memory?.level ?? "Companion"}
-        </span>
-        {controls}
+        {prefs.dockOpen ? (
+          <>
+            <span className="hidden rounded-full border border-cream-300/40 bg-cream-200/80 px-2 py-1 text-[10px] font-bold text-ink-400/80 shadow-md backdrop-blur-sm sm:block">
+              {memory?.level ?? "Companion"}
+            </span>
+            {controls}
+            <button
+              onClick={() => setPref({ dockOpen: false })}
+              aria-label="Collapse companion controls"
+              title="Collapse"
+              className="flex h-6 w-6 items-center justify-center rounded-full border border-cream-300/50 bg-cream-200/90 text-ink-400 shadow-md backdrop-blur-sm transition-colors hover:text-lav-300"
+            >
+              <ChevronDown className="h-3.5 w-3.5" />
+            </button>
+          </>
+        ) : (
+          <button
+            onClick={() => setPref({ dockOpen: true })}
+            aria-label="Expand companion controls"
+            title="Companion controls"
+            className="flex h-7 w-7 items-center justify-center rounded-full border border-cream-300/50 bg-cream-200/90 text-ink-400 shadow-md backdrop-blur-sm transition-colors hover:text-lav-300"
+          >
+            <ChevronUp className="h-3.5 w-3.5" />
+          </button>
+        )}
       </div>
     </>
   );
