@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Code2, ClipboardList, ArrowRight, LogOut, User, Zap, HelpCircle, FileCheck2, Trophy, History, Clock } from "lucide-react";
-import { Robot } from "@/components/mascot/Robot";
+import { Code2, ClipboardList, ArrowRight, LogOut, User, Zap, HelpCircle, FileCheck2, Trophy, History, Clock, BookOpen, PlayCircle, Brain, TrendingUp } from "lucide-react";
 import { Card } from "@/components/ui/Card";
+import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { leaveJavoodle } from "@/app/actions/student";
 import type { DashboardStats, RecentActivity } from "@/lib/student/stats";
 
@@ -20,7 +20,19 @@ const statCards = [
   { key: "examsTaken", label: "Exams taken", icon: FileCheck2, tone: "bg-sun-100 text-sun-400" },
 ] as const;
 
-export function Dashboard({ name, stats, activity }: { name: string; stats: DashboardStats; activity: RecentActivity }) {
+const quickLinks = [
+  { href: "/learn", label: "Learn", icon: BookOpen, tone: "bg-lav-100 text-lav-500" },
+  { href: "/practice", label: "Practice", icon: Brain, tone: "bg-sun-100 text-sun-500" },
+  { href: "/playground", label: "Playground", icon: Code2, tone: "bg-mint-100 text-mint-600" },
+  { href: "/growth", label: "Growth", icon: TrendingUp, tone: "bg-lav-100 text-lav-600" },
+];
+
+export function Dashboard({ name, stats, activity, nextLesson }: {
+  name: string;
+  stats: DashboardStats;
+  activity: RecentActivity;
+  nextLesson: { lessonId: string; title: string; topicName: string } | null;
+}) {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
   const hasActivity = activity.lastExam || activity.lastCoding || activity.latestResult || activity.pendingEvals > 0;
@@ -41,8 +53,9 @@ export function Dashboard({ name, stats, activity }: { name: string; stats: Dash
           initial={{ rotate: -12, opacity: 0 }}
           animate={{ rotate: 0, opacity: 1 }}
           transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+          className="flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-lav-100 to-mint-100 shadow-lg"
         >
-          <Robot mood="happy" size={110} />
+          <Code2 className="h-8 w-8 text-lav-400" />
         </motion.div>
         <div>
           <h1 className="text-4xl font-extrabold tracking-tight text-ink-800 sm:text-5xl">
@@ -63,7 +76,9 @@ export function Dashboard({ name, stats, activity }: { name: string; stats: Dash
                 <s.icon className="h-5 w-5" />
               </span>
               <div className="min-w-0">
-                <p className="text-2xl font-extrabold leading-none text-ink-800">{statValue(s.key)}</p>
+                <p className="text-2xl font-extrabold leading-none text-ink-800">
+                  <AnimatedNumber value={statValue(s.key)} />
+                </p>
                 <p className="mt-1 truncate text-xs font-bold text-ink-400">{s.label}</p>
               </div>
             </Card>
@@ -74,13 +89,52 @@ export function Dashboard({ name, stats, activity }: { name: string; stats: Dash
             </span>
             <div className="min-w-0">
               <p className="text-2xl font-extrabold leading-none text-ink-800">
-                {stats.averageExamScore !== null ? `${stats.averageExamScore}%` : "—"}
+                {stats.averageExamScore !== null ? (
+                  <AnimatedNumber value={stats.averageExamScore} suffix="%" />
+                ) : (
+                  "—"
+                )}
               </p>
               <p className="mt-1 truncate text-xs font-bold text-ink-400">Avg exam score</p>
             </div>
           </Card>
         </motion.section>
       )}
+
+      {/* Continue where you left off — real next lesson when available */}
+      {nextLesson && (
+        <motion.section variants={item}>
+          <Link href={`/learn/lesson/${nextLesson.lessonId}`} className="block">
+            <Card interactive className="flex flex-wrap items-center gap-4 border-lav-300/50 bg-gradient-to-r from-lav-50 to-cream-100 p-5">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-lav-100 text-lav-500">
+                <PlayCircle className="h-6 w-6" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-extrabold uppercase tracking-widest text-lav-500">Continue where you left off</p>
+                <p className="mt-0.5 truncate text-lg font-extrabold text-ink-800">{nextLesson.title}</p>
+                <p className="text-sm font-semibold text-ink-400">{nextLesson.topicName}</p>
+              </div>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-lav-400 px-4 py-2 text-sm font-extrabold text-white">
+                Resume <ArrowRight className="h-4 w-4" />
+              </span>
+            </Card>
+          </Link>
+        </motion.section>
+      )}
+
+      {/* Quick access to the learning journey */}
+      <motion.section variants={item} className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {quickLinks.map((l) => (
+          <Link key={l.href} href={l.href}>
+            <Card interactive className="flex flex-col items-center gap-2 p-4 text-center">
+              <span className={`flex h-10 w-10 items-center justify-center rounded-2xl ${l.tone}`}>
+                <l.icon className="h-5 w-5" />
+              </span>
+              <span className="text-sm font-extrabold text-ink-700">{l.label}</span>
+            </Card>
+          </Link>
+        ))}
+      </motion.section>
 
       {/* Two activity cards */}
       <motion.section variants={item} className="grid w-full gap-5 sm:grid-cols-2">

@@ -1,7 +1,7 @@
 import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { CodingQuestion, CodingSubmission, CodingTestCase } from "./shared";
-import { studentSafeQuestion } from "./shared";
+import { studentSafeQuestion, PLAYGROUND_TOPIC } from "./shared";
 
 export async function listCodingQuestionsAdmin() {
   const admin = createAdminClient();
@@ -54,6 +54,7 @@ export async function listPublishedCodingQuestions() {
     .from("coding_questions")
     .select("id,title,description,marks,difficulty,topic,time_recommendation_minutes,status")
     .eq("status", "published")
+    .neq("topic", PLAYGROUND_TOPIC)
     .order("created_at", { ascending: false });
   return (data ?? []) as CodingQuestion[];
 }

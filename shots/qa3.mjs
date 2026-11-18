@@ -1,0 +1,16 @@
+import { chromium } from "playwright";
+const b=await chromium.launch();
+const ctx=await b.newContext({viewport:{width:1920,height:1080}});
+const p=await ctx.newPage();
+await p.goto("http://localhost:3000/",{waitUntil:"domcontentloaded"});
+await p.fill('input[name="name"]',"Ava");
+await Promise.all([p.waitForURL("**/dashboard",{timeout:20000}),p.click('button[type="submit"]')]);
+await p.waitForTimeout(1200);
+const sel='button[aria-label="Javoodle companion — click to say hi"] [data-pupil]';
+console.log("companion pupils:",await p.locator(sel).count());
+await p.mouse.move(1650,150);await p.waitForTimeout(700);
+const t1=await p.locator(sel).first().getAttribute('transform');
+await p.mouse.move(300,900);await p.waitForTimeout(700);
+const t2=await p.locator(sel).first().getAttribute('transform');
+console.log("pupil transforms:",t1,"->",t2, t1!==t2?"TRACKING OK":"STILL NULL");
+await b.close();

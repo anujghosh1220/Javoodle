@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { emitRobotEvent } from "@/lib/mascot/events";
 import {
   saveExamAnswerAction,
   submitExamAction,
@@ -107,6 +109,7 @@ export function ExamRunner({
       await Promise.allSettled(flushes);
       await submitExamAction(attemptId);
       setSubmitting(false);
+      emitRobotEvent("celebrating");
       setSubmitted(true);
       setConfirming(false);
     },
@@ -190,7 +193,7 @@ export function ExamRunner({
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div data-keep-clear className="flex flex-col gap-4">
       {/* Top bar */}
       <Card className="flex flex-wrap items-center justify-between gap-3 p-4">
         <div className="min-w-0">
@@ -260,13 +263,19 @@ export function ExamRunner({
                   const idx = flat.findIndex((x) => x.id === qq.id);
                   if (idx !== current) return null;
                   return (
-                    <QuestionCard
+                    <motion.div
                       key={qq.id}
-                      question={qq}
-                      answer={answers[qq.id] ?? { text: "", mcq: null }}
-                      onChange={updateAnswer}
-                      disabled={submitted}
-                    />
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.18, ease: "easeOut" }}
+                    >
+                      <QuestionCard
+                        question={qq}
+                        answer={answers[qq.id] ?? { text: "", mcq: null }}
+                        onChange={updateAnswer}
+                        disabled={submitted}
+                      />
+                    </motion.div>
                   );
                 })}
               </div>

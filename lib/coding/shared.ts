@@ -109,3 +109,27 @@ export function sha256Hex(input: string): string {
 export const MAX_SOURCE_LENGTH = 50000;
 export const MAX_STDIN_LENGTH = 20000;
 export const MAX_OUTPUT_LENGTH = 20000;
+
+/**
+ * Reserved `topic` value for the seeded "Java Playground" sandbox question.
+ * It exists only so playground runs have a coding_questions row to log
+ * against (coding_execution_runs.question_id is NOT NULL) and is filtered
+ * out of the Coding Lab listing.
+ */
+export const PLAYGROUND_TOPIC = "__playground_sandbox__";
+
+export const PLAYGROUND_TITLE = "Java Playground";
+
+export const PLAYGROUND_STARTER_CODE = `import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        // Write and run any Java program here.
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter your name: ");
+        String name = sc.nextLine();
+        System.out.println("Hello, " + name + "!");
+    }
+}
+`;
+

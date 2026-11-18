@@ -49,10 +49,65 @@ body {
     radial-gradient(900px 500px at -10% 30%, rgba(52, 211, 153, 0.10), transparent 55%),
     radial-gradient(800px 500px at 60% 110%, rgba(34, 211, 238, 0.08), transparent 60%),
     var(--color-cream-50);
+  background-attachment: fixed;
   color: var(--color-ink-800);
   font-family: var(--font-sans);
 }
 
 ::selection {
   background: var(--color-lav-200);
+}
+
+/* Slim, theme-matched scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-cream-300) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--color-cream-300);
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Consistent focus visibility for keyboard users (utilities can still override) */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-lav-300);
+    outline-offset: 2px;
+  }
+}
+
+/* Gentle ambient float for hero decoration */
+@keyframes javoodle-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+.animate-float {
+  animation: javoodle-float 6s ease-in-out infinite;
+}
+.animate-float-slow {
+  animation: javoodle-float 9s ease-in-out infinite;
+}
+
+/* Respect reduced-motion: kill non-essential animation */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

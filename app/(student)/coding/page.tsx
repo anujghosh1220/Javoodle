@@ -2,13 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
 import { redirect } from "next/navigation";
-import { Code2, Clock, Target } from "lucide-react";
+import { Code2, Clock, Target, CheckCircle2 } from "lucide-react";
 import { getStudentSession } from "@/lib/student/session";
 import { listPublishedCodingQuestions, getStudentSubmittedQuestionIds } from "@/lib/coding/data";
 import { DIFFICULTY_LABELS } from "@/lib/coding/shared";
 import { Card } from "@/components/ui/Card";
 import { Chip } from "@/components/ui/Chip";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { Reveal, RevealItem } from "@/components/ui/Reveal";
 
 export const metadata: Metadata = { title: "Coding Lab" };
 export const instant = false;
@@ -25,28 +27,29 @@ export default async function CodingLabPage() {
   ]);
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="flex items-center gap-2 text-2xl font-extrabold text-ink-800 sm:text-3xl">
-          <Code2 className="h-7 w-7 text-lav-500" /> Coding Lab
-        </h1>
-        <p className="mt-1 font-semibold text-ink-400">
-          Java practice questions — write, run and submit your solutions.
-        </p>
-      </div>
+    <Reveal>
+      <RevealItem>
+        <PageHeader
+          icon={Code2}
+          title="Coding Lab"
+          description="Java practice questions — write, run and submit your solutions."
+        />
+      </RevealItem>
       {questions.length === 0 ? (
-        <EmptyState title="Looks like a fresh notebook! 📓" description="Your coding adventures will appear here soon." />
+        <RevealItem>
+          <EmptyState icon={Code2} title="Looks like a fresh notebook" description="Your coding adventures will appear here soon." />
+        </RevealItem>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
           {questions.map((q) => {
             const submitted = submittedIds.has(q.id);
             const card = (
-              <Card className={`flex h-full flex-col gap-3 p-5 transition-all ${submitted ? "opacity-60" : "transition-shadow hover:shadow-lg"}`}>
+              <Card className={`flex h-full flex-col gap-3 p-5 transition-all ${submitted ? "opacity-60" : "hover:-translate-y-0.5 hover:border-mint-300/60 hover:shadow-[0_16px_40px_-12px_rgba(0,0,0,0.55)]"}`}>
                 <div className="flex flex-wrap items-center gap-2">
                   <Chip tone={tone[q.difficulty] ?? "lav"}>{DIFFICULTY_LABELS[q.difficulty]}</Chip>
                   {q.topic && <Chip tone="mint">{q.topic}</Chip>}
                   <Chip tone="ink">{Number(q.marks)} marks</Chip>
-                  {submitted && <Chip tone="mint">✓ Submitted</Chip>}
+                  {submitted && <Chip tone="mint"><CheckCircle2 className="h-3 w-3" /> Submitted</Chip>}
                 </div>
                 <h2 className="text-lg font-extrabold text-ink-800">{q.title}</h2>
                 {q.description && <p className="line-clamp-2 text-sm font-semibold text-ink-500">{q.description}</p>}
@@ -59,13 +62,17 @@ export default async function CodingLabPage() {
               </Card>
             );
             return submitted ? (
-              <div key={q.id} className="cursor-not-allowed" title="Already submitted">{card}</div>
+              <RevealItem key={q.id} className="cursor-not-allowed" >
+                <div title="Already submitted">{card}</div>
+              </RevealItem>
             ) : (
-              <Link key={q.id} href={`/coding/${q.id}`}>{card}</Link>
+              <RevealItem key={q.id}>
+                <Link href={`/coding/${q.id}`} className="block h-full">{card}</Link>
+              </RevealItem>
             );
           })}
         </div>
       )}
-    </div>
+    </Reveal>
   );
 }

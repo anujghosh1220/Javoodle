@@ -1,7 +1,9 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { fadeUp } from "@/lib/motion";
 
 /** Student main wrapper — full-width for immersive routes (coding workspace). */
 export function StudentMain({ children }: { children: React.ReactNode }) {
@@ -14,7 +16,14 @@ export function StudentMain({ children }: { children: React.ReactNode }) {
         wide ? "max-w-[1800px]" : "max-w-[1500px]"
       )}
     >
-      {children}
+      <motion.div
+        key={pathname}
+        variants={fadeUp}
+        initial="hidden"
+        animate="show"
+      >
+        {children}
+      </motion.div>
     </main>
   );
 }

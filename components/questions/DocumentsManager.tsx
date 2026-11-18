@@ -7,7 +7,11 @@ import { Loader2, Play, RotateCcw, Trash2, Eye, Copy, Wand2, FileText } from "lu
 import { Card } from "@/components/ui/Card";
 import { Chip } from "@/components/ui/Chip";
 import { Button } from "@/components/ui/Button";
+import { Alert } from "@/components/ui/Alert";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { Textarea } from "@/components/ui/Field";
 import { extractDocumentAction, deleteDocumentAction, getDocumentSignedUrlAction, getAnalysisPromptAction, updateExtractedTextAction } from "@/app/actions/question-studio";
+import { FileSearch } from "lucide-react";
 
 export function DocumentsManager({ initialDocs }: { initialDocs: any[] }) {
   const router = useRouter();
@@ -87,11 +91,11 @@ export function DocumentsManager({ initialDocs }: { initialDocs: any[] }) {
 
   return (
     <div className="flex flex-col gap-4">
-      {msg && <div className="rounded-xl bg-cream-100 px-3 py-2 text-sm font-semibold text-ink-700">{msg}</div>}
+      {msg && <Alert tone={/fail|error|could not/i.test(msg) ? "error" : "success"}>{msg}</Alert>}
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="flex flex-col gap-3">
           {docs.map((d) => (
-            <Card key={d.id} className="flex flex-col gap-2 p-4">
+            <Card key={d.id} interactive className="flex flex-col gap-2 p-4">
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
                   <div className="truncate font-extrabold text-ink-800">{d.original_filename || d.filename}</div>
@@ -114,7 +118,7 @@ export function DocumentsManager({ initialDocs }: { initialDocs: any[] }) {
         </div>
         <div className="flex flex-col gap-3">
           {!preview ? (
-            <Card className="p-6 text-sm font-semibold text-ink-400">Select a document to view the original or extracted text.</Card>
+            <EmptyState icon={FileSearch} title="No preview selected" description="Select a document on the left to view the original file or its extracted text." />
           ) : preview.url ? (
             <Card className="flex flex-col gap-2 p-3">
               <div className="font-extrabold text-ink-700">Original: {preview.name}</div>
@@ -134,7 +138,7 @@ export function DocumentsManager({ initialDocs }: { initialDocs: any[] }) {
               <div className="flex items-center justify-between gap-2"><div className="font-extrabold text-ink-700">Extracted text: {preview.name}</div>
                 <Button size="sm" onClick={saveExtractionText} disabled={!preview.extractionId || pendingId===preview.id}>Save edits</Button>
               </div>
-              <textarea className="h-[70vh] w-full rounded-xl border-2 border-cream-300 p-3 font-mono text-xs" value={preview.text ?? ""} onChange={(e)=>setPreview(p=>p?{...p,text:e.target.value}:p)} />
+              <Textarea className="h-[70vh] font-mono text-xs" value={preview.text ?? ""} onChange={(e)=>setPreview(p=>p?{...p,text:e.target.value}:p)} />
               <p className="text-xs text-ink-400">Edit extracted content if needed, then save. Tables/diagrams/scanned regions may require manual review against the original (preserved in storage).</p>
             </Card>
           )}
