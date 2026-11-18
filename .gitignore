@@ -47,3 +47,4 @@ next-env.d.ts
 # local test credentials & artifacts
 .e2e-admin.json
 nul
+.dir-admin.json

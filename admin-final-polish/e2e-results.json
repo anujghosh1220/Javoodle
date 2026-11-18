@@ -1,0 +1,73 @@
+{
+  "results": [
+    {
+      "n": "admin login",
+      "ok": true
+    },
+    {
+      "n": "nav active /admin",
+      "ok": true
+    },
+    {
+      "n": "nav active /admin/students",
+      "ok": true
+    },
+    {
+      "n": "nav active /admin/students/11c05929-09ba-4cd3-9804-2b863b78efd7",
+      "ok": true
+    },
+    {
+      "n": "nav active /admin/exams",
+      "ok": true
+    },
+    {
+      "n": "nav active /admin/questions",
+      "ok": true
+    },
+    {
+      "n": "no hydration/console errors",
+      "ok": true
+    },
+    {
+      "n": "delete button present",
+      "ok": true
+    },
+    {
+      "n": "confirm dialog shows name",
+      "ok": true
+    },
+    {
+      "n": "redirected to directory",
+      "ok": true
+    },
+    {
+      "n": "s1 deleted",
+      "ok": true
+    },
+    {
+      "n": "s2 untouched",
+      "ok": true
+    },
+    {
+      "n": "sessions cascade-deleted",
+      "ok": true
+    },
+    {
+      "n": "dependents cascade-deleted",
+      "ok": true
+    },
+    {
+      "n": "exams table intact",
+      "ok": true
+    },
+    {
+      "n": "deleted detail -> not found",
+      "ok": true
+    },
+    {
+      "n": "non-admin blocked from detail",
+      "ok": true
+    }
+  ],
+  "consoleErrs": []
+}
