@@ -1,4 +1,4 @@
-import { RobotCompanion } from "@/components/mascot/RobotCompanion";
+import { LazyRobotCompanion } from "@/components/mascot/LazyRobotCompanion";
 import { ExperienceEffects } from "@/components/experience/ExperienceEffects";
 import { SoundBridge } from "@/components/atmosphere/SoundBridge";
 import { connection } from "next/server";
@@ -27,7 +27,7 @@ export default async function StudentLayout({
       <ExperienceEffects />
       <SoundBridge />
       <StudentMain>{children}</StudentMain>
-      <RobotCompanion memory={memory} />
+      <LazyRobotCompanion memory={memory} />
     </div>
   );
 }

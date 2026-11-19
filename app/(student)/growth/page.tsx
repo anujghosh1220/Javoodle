@@ -12,7 +12,8 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { Reveal, RevealItem } from "@/components/ui/Reveal";
 import { BackButton } from "@/components/student/BackButton";
-import { AchievementConstellation } from "@/components/experience/AchievementConstellation";
+import dynamic from "next/dynamic";
+const AchievementConstellation = dynamic(() => import("@/components/experience/AchievementConstellation").then(m => m.AchievementConstellation));
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseConfigured, hasServiceRoleKey } from "@/lib/env";
 

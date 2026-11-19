@@ -12,7 +12,8 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { Reveal, RevealItem } from "@/components/ui/Reveal";
 import { BackButton } from "@/components/student/BackButton";
-import { LearningGalaxy } from "@/components/experience/LearningGalaxy";
+import dynamic from "next/dynamic";
+const LearningGalaxy = dynamic(() => import("@/components/experience/LearningGalaxy").then(m => m.LearningGalaxy));
 
 export const metadata: Metadata = { title: "Learn" };
 export const instant = false;

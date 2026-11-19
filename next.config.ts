@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   partialPrefetching: true,
   allowedDevOrigins: ["127.0.0.1", "localhost"],
   experimental: {
+    optimizePackageImports: ["lucide-react"],
     serverActions: {
       // Devin/browser-preview proxy origin (host:port as seen by the browser).
       // Same-origin access via localhost:3000 needs no entry.
