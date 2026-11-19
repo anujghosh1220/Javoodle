@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Quicksand, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { CodeRain } from "@/components/CodeRain";
+import { AtmosphereProvider } from "@/components/atmosphere/AtmosphereProvider";
 
 const quicksand = Quicksand({
   variable: "--font-quicksand",
@@ -29,8 +29,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${quicksand.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <CodeRain />
-        <div className="relative z-10 flex min-h-full flex-1 flex-col">{children}</div>
+        <AtmosphereProvider>
+          <div className="relative z-10 flex min-h-full flex-1 flex-col">{children}</div>
+        </AtmosphereProvider>
       </body>
     </html>
   );

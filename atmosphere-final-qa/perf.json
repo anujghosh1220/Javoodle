@@ -1,0 +1,13 @@
+{
+  "canvasCount": 1,
+  "atmoCanvasCount": 1,
+  "fpsDashboard": 9,
+  "heapStart": 25,
+  "heapAfterNav": 25,
+  "canvasAfterNav": 1,
+  "presetSwitchMs": 0,
+  "presetUiSwitchTotalMs": 3174,
+  "canvasClearedWhenOff": 135294,
+  "canvasSizeAfterResize": "1366x768",
+  "malformedPrefsOk": true
+}

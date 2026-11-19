@@ -100,6 +100,123 @@ body {
   animation: javoodle-float 9s ease-in-out infinite;
 }
 
+/* ---- Javoodle Atmosphere layers ---- */
+
+/* Aurora blobs — slow transform drift only (compositor-friendly). */
+.atmo-aurora {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(10px);
+  will-change: transform;
+}
+.atmo-aurora-a {
+  width: 62vmax;
+  height: 62vmax;
+  top: -22vmax;
+  left: -14vmax;
+  animation: atmo-drift-a 46s ease-in-out infinite alternate;
+}
+.atmo-aurora-b {
+  width: 55vmax;
+  height: 55vmax;
+  top: 24vh;
+  right: -20vmax;
+  animation: atmo-drift-b 58s ease-in-out infinite alternate;
+}
+.atmo-aurora-c {
+  width: 48vmax;
+  height: 48vmax;
+  bottom: -18vmax;
+  left: 22vw;
+  animation: atmo-drift-c 52s ease-in-out infinite alternate;
+}
+@keyframes atmo-drift-a {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(9vmax, 6vmax, 0) scale(1.12); }
+}
+@keyframes atmo-drift-b {
+  from { transform: translate3d(0, 0, 0) scale(1.08); }
+  to { transform: translate3d(-8vmax, -7vmax, 0) scale(0.96); }
+}
+@keyframes atmo-drift-c {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(6vmax, -5vmax, 0) scale(1.1); }
+}
+
+/* Floating Java holograms — gentle rise/fade, very low contrast. */
+.atmo-holo {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--color-lav-300);
+  opacity: 0;
+  text-shadow: 0 0 14px rgba(168, 85, 247, 0.35);
+  animation-name: atmo-holo-float;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  white-space: nowrap;
+  user-select: none;
+}
+@keyframes atmo-holo-float {
+  0% { opacity: 0; transform: translateY(14px); }
+  18% { opacity: 0.09; }
+  70% { opacity: 0.09; }
+  100% { opacity: 0; transform: translateY(-22px); }
+}
+
+/* Robot mood aura — soft glow tied to emotional state. */
+.robot-aura {
+  position: absolute;
+  inset: -18%;
+  border-radius: 9999px;
+  filter: blur(22px);
+  pointer-events: none;
+  transition: background 600ms ease, opacity 600ms ease;
+}
+.robot-aura-thinking { background: radial-gradient(closest-side, rgba(168,85,247,0.30), transparent 70%); }
+.robot-aura-celebrating { background: radial-gradient(closest-side, rgba(52,211,153,0.32), transparent 70%); }
+.robot-aura-happy,
+.robot-aura-excited { background: radial-gradient(closest-side, rgba(34,211,238,0.22), transparent 70%); }
+.robot-aura-idle,
+.robot-aura-sleepy { background: radial-gradient(closest-side, rgba(139,92,246,0.14), transparent 70%); }
+.robot-aura-confused,
+.robot-aura-sad,
+.robot-aura-encouraging { background: radial-gradient(closest-side, rgba(251,191,36,0.20), transparent 70%); }
+.robot-aura-focused { background: radial-gradient(closest-side, rgba(34,211,238,0.18), transparent 70%); }
+
+/* Atmosphere settings slider */
+.atmo-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-cream-200);
+  outline: none;
+  cursor: pointer;
+}
+.atmo-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--color-lav-400);
+  border: 3px solid var(--color-cream-100);
+  box-shadow: 0 0 0 1px var(--color-cream-300);
+  transition: transform 150ms ease;
+}
+.atmo-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+.atmo-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--color-lav-400);
+  border: 3px solid var(--color-cream-100);
+  box-shadow: 0 0 0 1px var(--color-cream-300);
+}
+
 /* Respect reduced-motion: kill non-essential animation */
 @media (prefers-reduced-motion: reduce) {
   *,

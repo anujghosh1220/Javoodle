@@ -1,0 +1,134 @@
+[
+  {
+    "file": "settings-matrix-1920x1080.png",
+    "route": "/dashboard",
+    "viewport": "1920x1080",
+    "state": "matrix",
+    "ok": true,
+    "probe": {
+      "stored": {
+        "mode": "matrix",
+        "effects": true,
+        "matrixIntensity": 55,
+        "particleIntensity": 60,
+        "auroraIntensity": 60,
+        "cursorLight": true,
+        "holograms": true,
+        "reducedMotion": false,
+        "sound": false
+      },
+      "holo": 0,
+      "aurora": 3
+    }
+  },
+  {
+    "file": "settings-neural-1920x1080.png",
+    "route": "/dashboard",
+    "viewport": "1920x1080",
+    "state": "neural",
+    "ok": true,
+    "probe": {
+      "stored": {
+        "mode": "neural",
+        "effects": true,
+        "matrixIntensity": 55,
+        "particleIntensity": 60,
+        "auroraIntensity": 60,
+        "cursorLight": true,
+        "holograms": true,
+        "reducedMotion": false,
+        "sound": false
+      },
+      "holo": 0,
+      "aurora": 3
+    }
+  },
+  {
+    "file": "settings-aurora-1920x1080.png",
+    "route": "/dashboard",
+    "viewport": "1920x1080",
+    "state": "aurora",
+    "ok": true,
+    "probe": {
+      "stored": {
+        "mode": "aurora",
+        "effects": true,
+        "matrixIntensity": 55,
+        "particleIntensity": 60,
+        "auroraIntensity": 60,
+        "cursorLight": true,
+        "holograms": true,
+        "reducedMotion": false,
+        "sound": false
+      },
+      "holo": 0,
+      "aurora": 3
+    }
+  },
+  {
+    "file": "settings-minimal-1920x1080.png",
+    "route": "/dashboard",
+    "viewport": "1920x1080",
+    "state": "minimal",
+    "ok": true,
+    "probe": {
+      "stored": {
+        "mode": "minimal",
+        "effects": true,
+        "matrixIntensity": 55,
+        "particleIntensity": 60,
+        "auroraIntensity": 60,
+        "cursorLight": true,
+        "holograms": true,
+        "reducedMotion": false,
+        "sound": false
+      },
+      "holo": 0,
+      "aurora": 0
+    }
+  },
+  {
+    "file": "settings-fx-off-1920x1080.png",
+    "route": "/dashboard",
+    "viewport": "1920x1080",
+    "state": "fx-off",
+    "ok": true,
+    "probe": {
+      "stored": {
+        "mode": "minimal",
+        "effects": false,
+        "matrixIntensity": 55,
+        "particleIntensity": 60,
+        "auroraIntensity": 60,
+        "cursorLight": true,
+        "holograms": true,
+        "reducedMotion": false,
+        "sound": false
+      },
+      "holo": 0,
+      "aurora": 0
+    }
+  },
+  {
+    "file": "settings-reduced-1920x1080.png",
+    "route": "/dashboard",
+    "viewport": "1920x1080",
+    "state": "reduced",
+    "ok": true,
+    "probe": {
+      "stored": {
+        "mode": "minimal",
+        "effects": false,
+        "matrixIntensity": 55,
+        "particleIntensity": 60,
+        "auroraIntensity": 60,
+        "cursorLight": true,
+        "holograms": true,
+        "reducedMotion": true,
+        "sound": false
+      },
+      "holo": 0,
+      "aurora": 0
+    }
+  }
+]

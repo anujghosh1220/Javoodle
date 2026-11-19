@@ -539,10 +539,11 @@ export function RobotCompanion({ memory }: { memory?: CompanionMemory }) {
       <div className="pointer-events-none fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2 sm:bottom-6 sm:right-6">
         <AnimatePresence>{bubbleElStatic}</AnimatePresence>
         <div className="pointer-events-auto relative">
+          <div aria-hidden="true" className={`robot-aura robot-aura-${mood}`} />
           <button
             onClick={poke}
             aria-label="Javoodle companion — click to say hi"
-            className="block cursor-pointer transition-transform hover:scale-105 active:scale-95"
+            className="relative block cursor-pointer transition-transform hover:scale-105 active:scale-95"
           >
             <Robot mood={mood} size={104} className="h-24 w-auto sm:h-32" trackCursor />
           </button>
@@ -572,11 +573,12 @@ export function RobotCompanion({ memory }: { memory?: CompanionMemory }) {
       <div ref={wrapRef} data-companion className="pointer-events-none fixed left-0 top-0 z-40 will-change-transform overflow-visible">
         {bubbleEl}
         <div ref={flipRef} className="relative overflow-visible" style={{ transform: "translate(-50%, -100%)" }}>
-          <div ref={robotBoxRef} className="overflow-visible">
+          <div ref={robotBoxRef} className="relative overflow-visible">
+            <div aria-hidden="true" className={`robot-aura robot-aura-${mood}`} />
             <button
               onClick={poke}
               aria-label="Javoodle companion — click to say hi"
-              className="pointer-events-auto block cursor-pointer"
+              className="pointer-events-auto relative block cursor-pointer"
             >
               <Robot mood={mood} size={128} className="h-28 w-auto sm:h-36" animated={false} />
             </button>

@@ -1,0 +1,381 @@
+[
+  {
+    "file": "landing-1440x900.png",
+    "route": "/",
+    "viewport": "1440x900",
+    "state": "default auto preset",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "landing-1920x1080.png",
+    "route": "/",
+    "viewport": "1920x1080",
+    "state": "default auto preset",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "landing-1366x768.png",
+    "route": "/",
+    "viewport": "1366x768",
+    "state": "default auto preset",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "login",
+    "route": "/",
+    "viewport": "1920x1080",
+    "state": "student login as Ava",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "dashboard-1920x1080.png",
+    "route": "/dashboard",
+    "viewport": "1920x1080",
+    "state": "default auto",
+    "ok": true
+  },
+  {
+    "file": "learn-1920x1080.png",
+    "route": "/learn",
+    "viewport": "1920x1080",
+    "state": "default auto",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "practice-1920x1080.png",
+    "route": "/practice",
+    "viewport": "1920x1080",
+    "state": "default auto",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "coding-1920x1080.png",
+    "route": "/coding",
+    "viewport": "1920x1080",
+    "state": "default auto",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "playground-1920x1080.png",
+    "route": "/playground",
+    "viewport": "1920x1080",
+    "state": "default auto",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "growth-1920x1080.png",
+    "route": "/growth",
+    "viewport": "1920x1080",
+    "state": "default auto",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "exams-1920x1080.png",
+    "route": "/exams",
+    "viewport": "1920x1080",
+    "state": "default auto",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "learn-detail-1920x1080.png",
+    "route": "/learn/e9066c5f-3ad0-4748-8bd1-c9fb012cf8d3",
+    "viewport": "1920x1080",
+    "state": "learn subpage",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "coding-workspace-1920x1080.png",
+    "route": "/coding/fc3fdeb0-2599-40e2-abf2-e4c90696c8c5",
+    "viewport": "1920x1080",
+    "state": "monaco editor visible",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "practice-session-1920x1080.png",
+    "route": "/practice/session?topic=all",
+    "viewport": "1920x1080",
+    "state": "question visible",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "practice-feedback-1920x1080.png",
+    "route": "/practice/session?topic=all",
+    "viewport": "1920x1080",
+    "state": "post-answer feedback (correct or incorrect)",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "exams",
+    "route": "/exams",
+    "viewport": "1920x1080",
+    "state": "exam detail/take",
+    "ok": false,
+    "note": "no published exams for student"
+  },
+  {
+    "file": "settings-default-1920x1080.png",
+    "route": "/dashboard",
+    "viewport": "1920x1080",
+    "state": "settings card visible",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "settings-matrix-1920x1080.png",
+    "route": "/dashboard",
+    "viewport": "1920x1080",
+    "state": "preset/state: matrix",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "settings-neural-1920x1080.png",
+    "route": "/dashboard",
+    "viewport": "1920x1080",
+    "state": "preset/state: neural",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "settings-aurora-1920x1080.png",
+    "route": "/dashboard",
+    "viewport": "1920x1080",
+    "state": "preset/state: aurora",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "settings-minimal-1920x1080.png",
+    "route": "/dashboard",
+    "viewport": "1920x1080",
+    "state": "preset/state: minimal",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "settings-fx-off-1920x1080.png",
+    "route": "/dashboard",
+    "viewport": "1920x1080",
+    "state": "preset/state: fx-off",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "settings-reduced-1920x1080.png",
+    "route": "/dashboard",
+    "viewport": "1920x1080",
+    "state": "preset/state: reduced",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "dashboard-1440x900.png",
+    "route": "/dashboard",
+    "viewport": "1440x900",
+    "state": "auto preset",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "coding-1440x900.png",
+    "route": "/coding",
+    "viewport": "1440x900",
+    "state": "auto preset",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "learn-1440x900.png",
+    "route": "/learn",
+    "viewport": "1440x900",
+    "state": "auto preset",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "dashboard-1366x768.png",
+    "route": "/dashboard",
+    "viewport": "1366x768",
+    "state": "auto preset",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "coding-1366x768.png",
+    "route": "/coding",
+    "viewport": "1366x768",
+    "state": "auto preset",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "learn-1366x768.png",
+    "route": "/learn",
+    "viewport": "1366x768",
+    "state": "auto preset",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "admin-login-1920x1080.png",
+    "route": "/admin/login",
+    "viewport": "1920x1080",
+    "state": "public admin login",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "admin-redirect-1920x1080.png",
+    "route": "/admin",
+    "viewport": "1920x1080",
+    "state": "unauthenticated admin (redirects to login)",
+    "ok": true,
+    "note": ""
+  },
+  {
+    "file": "settings-matrix-1920x1080.png",
+    "route": "/dashboard",
+    "viewport": "1920x1080",
+    "state": "matrix",
+    "ok": true,
+    "probe": {
+      "stored": {
+        "mode": "matrix",
+        "effects": true,
+        "matrixIntensity": 55,
+        "particleIntensity": 60,
+        "auroraIntensity": 60,
+        "cursorLight": true,
+        "holograms": true,
+        "reducedMotion": false,
+        "sound": false
+      },
+      "holo": 0,
+      "aurora": 3
+    }
+  },
+  {
+    "file": "settings-neural-1920x1080.png",
+    "route": "/dashboard",
+    "viewport": "1920x1080",
+    "state": "neural",
+    "ok": true,
+    "probe": {
+      "stored": {
+        "mode": "neural",
+        "effects": true,
+        "matrixIntensity": 55,
+        "particleIntensity": 60,
+        "auroraIntensity": 60,
+        "cursorLight": true,
+        "holograms": true,
+        "reducedMotion": false,
+        "sound": false
+      },
+      "holo": 0,
+      "aurora": 3
+    }
+  },
+  {
+    "file": "settings-aurora-1920x1080.png",
+    "route": "/dashboard",
+    "viewport": "1920x1080",
+    "state": "aurora",
+    "ok": true,
+    "probe": {
+      "stored": {
+        "mode": "aurora",
+        "effects": true,
+        "matrixIntensity": 55,
+        "particleIntensity": 60,
+        "auroraIntensity": 60,
+        "cursorLight": true,
+        "holograms": true,
+        "reducedMotion": false,
+        "sound": false
+      },
+      "holo": 0,
+      "aurora": 3
+    }
+  },
+  {
+    "file": "settings-minimal-1920x1080.png",
+    "route": "/dashboard",
+    "viewport": "1920x1080",
+    "state": "minimal",
+    "ok": true,
+    "probe": {
+      "stored": {
+        "mode": "minimal",
+        "effects": true,
+        "matrixIntensity": 55,
+        "particleIntensity": 60,
+        "auroraIntensity": 60,
+        "cursorLight": true,
+        "holograms": true,
+        "reducedMotion": false,
+        "sound": false
+      },
+      "holo": 0,
+      "aurora": 0
+    }
+  },
+  {
+    "file": "settings-fx-off-1920x1080.png",
+    "route": "/dashboard",
+    "viewport": "1920x1080",
+    "state": "fx-off",
+    "ok": true,
+    "probe": {
+      "stored": {
+        "mode": "minimal",
+        "effects": false,
+        "matrixIntensity": 55,
+        "particleIntensity": 60,
+        "auroraIntensity": 60,
+        "cursorLight": true,
+        "holograms": true,
+        "reducedMotion": false,
+        "sound": false
+      },
+      "holo": 0,
+      "aurora": 0
+    }
+  },
+  {
+    "file": "settings-reduced-1920x1080.png",
+    "route": "/dashboard",
+    "viewport": "1920x1080",
+    "state": "reduced",
+    "ok": true,
+    "probe": {
+      "stored": {
+        "mode": "minimal",
+        "effects": false,
+        "matrixIntensity": 55,
+        "particleIntensity": 60,
+        "auroraIntensity": 60,
+        "cursorLight": true,
+        "holograms": true,
+        "reducedMotion": true,
+        "sound": false
+      },
+      "holo": 0,
+      "aurora": 0
+    }
+  }
+]

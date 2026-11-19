@@ -180,8 +180,31 @@ export function PracticeSession({ questions, backHref }: { questions: PracticeQu
                 </div>
               </div>
             ) : (
-              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-3">
-                <div className={`flex items-start gap-3 rounded-2xl p-4 ${feedback.correct ? "bg-mint-50" : "bg-sun-50"}`}>
+              <motion.div
+                key={`fb-${index}-${answeredCount}`}
+                initial={feedback.correct ? { opacity: 0, scale: 0.94 } : { opacity: 0, x: -10 }}
+                animate={
+                  feedback.correct
+                    ? { opacity: 1, scale: [0.94, 1.03, 1] }
+                    : { opacity: 1, x: [0, -5, 4, -2, 0] }
+                }
+                transition={{ duration: feedback.correct ? 0.45 : 0.3, ease: "easeOut" }}
+                className="relative flex flex-col gap-3"
+              >
+                {feedback.correct && (
+                  <span aria-hidden="true" className="pointer-events-none absolute -top-2 left-8 flex gap-1.5">
+                    {[0, 1, 2, 3, 4].map((i) => (
+                      <motion.span
+                        key={i}
+                        initial={{ opacity: 0, y: 6, scale: 0.4 }}
+                        animate={{ opacity: [0, 1, 0], y: -18 - i * 3, scale: 1 }}
+                        transition={{ duration: 0.7, delay: i * 0.06, ease: "easeOut" }}
+                        className="h-1.5 w-1.5 rounded-full bg-mint-300"
+                      />
+                    ))}
+                  </span>
+                )}
+                <div className={`flex items-start gap-3 rounded-2xl p-4 ${feedback.correct ? "bg-mint-50 ring-2 ring-mint-300/50" : "bg-sun-50"}`}>
                   {feedback.correct ? <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-mint-500" /> : <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-sun-500" />}
                   <div>
                     <p className={`text-sm font-extrabold ${feedback.correct ? "text-mint-600" : "text-ink-700"}`}>

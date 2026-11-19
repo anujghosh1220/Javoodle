@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Code2, ClipboardList, ArrowRight, LogOut, User, Zap, HelpCircle, FileCheck2, Trophy, History, Clock, BookOpen, PlayCircle, Brain, TrendingUp } from "lucide-react";
 import { Card } from "@/components/ui/Card";
+import { AtmosphereSettings } from "@/components/atmosphere/AtmosphereSettings";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { leaveJavoodle } from "@/app/actions/student";
 import type { DashboardStats, RecentActivity } from "@/lib/student/stats";
@@ -213,6 +214,9 @@ export function Dashboard({ name, stats, activity, nextLesson }: {
           )}
         </Card>
       </motion.section>
+
+      {/* Atmosphere preferences */}
+      <AtmosphereSettings />
 
       {/* Footer */}
       <motion.footer variants={item} className="flex flex-col items-center gap-3">
