@@ -6,6 +6,7 @@ import {
   createStudentSession,
   clearStudentSession,
 } from "@/lib/student/session";
+import { StudentNameTakenError } from "@/lib/student/name";
 
 export interface StudentFormState {
   error?: string;
@@ -22,7 +23,12 @@ export async function enterJavoodle(
 
   try {
     await createStudentSession(parsed.data);
-  } catch {
+  } catch (e) {
+    if (e instanceof StudentNameTakenError) {
+      return {
+        error: "That name is already taken — please choose a different one.",
+      };
+    }
     return {
       error:
         "Couldn't reach the learning database. Please try again in a moment.",

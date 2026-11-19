@@ -2,6 +2,7 @@ import { cookies, headers } from "next/headers";
 import { cache } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { isSupabaseConfigured, hasServiceRoleKey } from "@/lib/env";
+import { normalizeStudentName, StudentNameTakenError } from "@/lib/student/name";
 import { createAdminClient } from "@/lib/supabase/admin";
 import {
   SESSION_TTL_MS,
@@ -71,20 +72,24 @@ async function findOrCreateStudent(
     .select("id, display_name")
     .returns<Array<{ id: string; display_name: string }>>();
 
-  const wanted = displayName.trim().toLowerCase();
+  const wanted = normalizeStudentName(displayName);
   const match = existing?.find(
-    (s) => s.display_name.trim().toLowerCase() === wanted
+    (s) => normalizeStudentName(s.display_name) === wanted
   );
   if (match) return match.id;
 
   const { data, error } = await admin
     .from("students")
-    .insert({ display_name: displayName.trim() })
+    .insert({ display_name: displayName.trim().replace(/\s+/g, " ") })
     .select("id")
     .single();
-  if (error || !data) {
+  if (error) {
+    if ((error as { code?: string }).code === "23505") {
+      throw new StudentNameTakenError();
+    }
     throw new Error("Could not create student profile");
   }
+  if (!data) throw new Error("Could not create student profile");
   return data.id;
 }
 
