@@ -228,3 +228,23 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* JAVOODLE wordmark — gradient flow after decode */
+.javoodle-wordmark { display: inline-block; }
+.javoodle-wordmark-text {
+  background: linear-gradient(90deg, #F8FAFC 0%, #F8FAFC 30%, #8B5CF6 45%, #22D3EE 55%, #F8FAFC 70%, #F8FAFC 100%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.javoodle-wordmark.is-decoded .javoodle-wordmark-text {
+  animation: wordmark-flow 5s linear infinite;
+}
+@keyframes wordmark-flow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 220% 50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .javoodle-wordmark.is-decoded .javoodle-wordmark-text { animation: none; }
+}

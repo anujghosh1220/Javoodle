@@ -1,0 +1,2 @@
+# Student Performance
+Warm FCP 750–1330ms across 10 routes — already at/near the 1s meaningful-content budget for most routes; coding/playground/visualizer best (~680–930ms load). TTFB ~5ms means data is never the wait. Remaining gap to sub-1s FCP is hydration-bound; safe wins would be reducing shared client JS, which conflicts with the motion design system — deferred as NOT IMPROVED rather than risk regressions.

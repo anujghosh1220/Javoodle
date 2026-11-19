@@ -1,0 +1,2 @@
+# Bundle Analysis
+Transfer per route only ~26–32KB compressed (chunks cached across navigations). FCP ~1s ⇒ cost is JS execution/hydration, not bytes. Heavy deps already lazy: Monaco (dynamic ssr:false), monaco workers local. framer-motion is the main shared cost — used pervasively by design system; removing it would harm the motion language, not justified by evidence. No unused-dependency removal performed (no profiling evidence of waste). LCP null in measurements — paint-timing API limitation, documented.

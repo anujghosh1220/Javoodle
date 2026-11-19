@@ -141,10 +141,11 @@ const getStudentSessionInner = async (): Promise<StudentSession | null> => {
   if (!token) return null;
 
   if (dbEnabled()) {
-    if (!isWellFormedToken(token)) {
-      await clearCookies();
-      return null;
-    }
+    // NOTE: cookies cannot be mutated during RSC render in Next.js 16 —
+    // invalid sessions are treated as absent; the stale cookie is simply
+    // overwritten by setSessionCookies on the next successful login, and
+    // clearStudentSession (Server Action context) handles explicit logout.
+    if (!isWellFormedToken(token)) return null;
 
     const admin = createAdminClient();
     const tokenHash = hashSessionToken(token);
@@ -163,19 +164,13 @@ const getStudentSessionInner = async (): Promise<StudentSession | null> => {
         students: { id: string; display_name: string };
       }>();
 
-    if (!data) {
-      await clearCookies();
-      return null;
-    }
+    if (!data) return null;
 
     const usable = isSessionUsable({
       expiresAt: new Date(data.expires_at),
       revokedAt: data.revoked_at ? new Date(data.revoked_at) : null,
     });
-    if (!usable) {
-      await clearCookies();
-      return null;
-    }
+    if (!usable) return null;
 
     // Throttled last_seen update (at most once per 5 minutes).
     const lastSeen = data.last_seen_at ? new Date(data.last_seen_at) : null;

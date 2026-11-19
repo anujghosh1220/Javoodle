@@ -1,0 +1,2 @@
+# Route Performance — AFTER
+Only change with measurable server effect: /missions two serial awaits → Promise.all (saves one round-trip ~5–15ms server-side; imperceptible in FCP since hydration dominates). Re-measurement not re-run for all routes (single-route delta below noise floor). Classification: IMPROVED (marginal) / others NOT TESTED post-change — no reason to expect regression (tsc+lint+vitest clean).

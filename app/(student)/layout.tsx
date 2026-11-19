@@ -1,4 +1,6 @@
 import { RobotCompanion } from "@/components/mascot/RobotCompanion";
+import { ExperienceEffects } from "@/components/experience/ExperienceEffects";
+import { SoundBridge } from "@/components/atmosphere/SoundBridge";
 import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { StudentNav } from "@/components/student/StudentNav";
@@ -22,6 +24,8 @@ export default async function StudentLayout({
   return (
     <div className="flex min-h-full flex-1 flex-col">
       <StudentNav />
+      <ExperienceEffects />
+      <SoundBridge />
       <StudentMain>{children}</StudentMain>
       <RobotCompanion memory={memory} />
     </div>

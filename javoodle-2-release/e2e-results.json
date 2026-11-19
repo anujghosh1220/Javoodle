@@ -1,0 +1,182 @@
+{
+  "results": [
+    {
+      "name": "login",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "name": "missions-hub-loads",
+      "status": "PASS",
+      "note": "11 links"
+    },
+    {
+      "name": "monaco-present",
+      "status": "PASS",
+      "note": "1 editors"
+    },
+    {
+      "name": "hint-reveal",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "name": "wrong-code-fails",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "name": "right-code-passes-xp",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "name": "resubmit-blocked",
+      "status": "PASS",
+      "note": "button disabled after completion"
+    },
+    {
+      "name": "completion-persists",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "name": "viz-step",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "name": "viz-play-pause",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "name": "viz-examples",
+      "status": "PASS",
+      "note": "6 captured"
+    },
+    {
+      "name": "projects-load",
+      "status": "PASS",
+      "note": "5 cards"
+    },
+    {
+      "name": "rank-displayed",
+      "status": "PASS",
+      "note": ""
+    }
+  ],
+  "errors": [],
+  "manifest": [
+    {
+      "file": "missions-hub-1920.png",
+      "route": "/missions",
+      "state": "catalogue"
+    },
+    {
+      "file": "mission-detail-1920.png",
+      "route": "/missions/prime-guardian",
+      "state": "editor+briefing"
+    },
+    {
+      "file": "mission-wrong-feedback-1920.png",
+      "route": "/missions/digit-sum",
+      "state": "wrong submission"
+    },
+    {
+      "file": "mission-success-1920.png",
+      "route": "/missions/digit-sum",
+      "state": "completed+XP"
+    },
+    {
+      "file": "missions-after-complete-1920.png",
+      "route": "/missions",
+      "state": "post-completion"
+    },
+    {
+      "file": "visualizer-default-1920.png",
+      "route": "/visualizer",
+      "state": "variables example"
+    },
+    {
+      "file": "visualizer-ex0-1920.png",
+      "route": "/visualizer",
+      "state": "example 0"
+    },
+    {
+      "file": "visualizer-ex1-1920.png",
+      "route": "/visualizer",
+      "state": "example 1"
+    },
+    {
+      "file": "visualizer-ex2-1920.png",
+      "route": "/visualizer",
+      "state": "example 2"
+    },
+    {
+      "file": "visualizer-ex3-1920.png",
+      "route": "/visualizer",
+      "state": "example 3"
+    },
+    {
+      "file": "visualizer-ex4-1920.png",
+      "route": "/visualizer",
+      "state": "example 4"
+    },
+    {
+      "file": "visualizer-ex5-1920.png",
+      "route": "/visualizer",
+      "state": "example 5"
+    },
+    {
+      "file": "projects-1920.png",
+      "route": "/projects",
+      "state": "catalogue"
+    },
+    {
+      "file": "dashboard-rank-1920.png",
+      "route": "/dashboard",
+      "state": "rank+possible unlock toast"
+    },
+    {
+      "file": "missions-1440.png",
+      "route": "/missions",
+      "state": "auto preset"
+    },
+    {
+      "file": "visualizer-1440.png",
+      "route": "/visualizer",
+      "state": "auto preset"
+    },
+    {
+      "file": "projects-1440.png",
+      "route": "/projects",
+      "state": "auto preset"
+    },
+    {
+      "file": "dashboard-1440.png",
+      "route": "/dashboard",
+      "state": "auto preset"
+    },
+    {
+      "file": "missions-1366.png",
+      "route": "/missions",
+      "state": "auto preset"
+    },
+    {
+      "file": "visualizer-1366.png",
+      "route": "/visualizer",
+      "state": "auto preset"
+    },
+    {
+      "file": "projects-1366.png",
+      "route": "/projects",
+      "state": "auto preset"
+    },
+    {
+      "file": "dashboard-1366.png",
+      "route": "/dashboard",
+      "state": "auto preset"
+    }
+  ]
+}

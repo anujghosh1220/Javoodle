@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { adminLogout } from "@/app/actions/admin";
+import { Wordmark } from "@/components/ui/Wordmark";
 
 const items = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
@@ -71,8 +72,8 @@ export function AdminNav() {
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-lav-400 to-mint-400 text-white">
             <LayoutDashboard className="h-4.5 w-4.5" />
           </span>
-          <span className="hidden text-lg font-extrabold tracking-tight text-ink-800 sm:block">
-            Jav<span className="text-lav-400">oo</span>dl<span className="text-mint-500">e</span>
+          <span className="hidden sm:block"><Wordmark className="text-lg font-extrabold tracking-tight" accentClass="text-lav-400" /></span>
+          <span className="hidden">
             <span className="ml-2 rounded-full bg-lav-100 px-2 py-0.5 align-middle text-[10px] font-extrabold uppercase tracking-wide text-lav-600">
               Admin
             </span>

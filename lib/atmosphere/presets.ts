@@ -53,6 +53,27 @@ function base(pathname: string): Omit<AtmosphereConfig, "off" | "calm"> {
       holograms: true, cursorLight: true, accent: "purple",
     };
   }
+  if (/^\/missions/.test(pathname)) {
+    // Mission arena — cyan/green challenge energy.
+    return {
+      rain: 0.3, particles: 0.65, orbitals: 0.4, aurora: 0.6, grid: 0.12,
+      holograms: false, cursorLight: true, accent: "cyan",
+    };
+  }
+  if (/^\/visualizer/.test(pathname)) {
+    // Visualizer — cyan/violet, grid-forward like a lab bench.
+    return {
+      rain: 0.15, particles: 0.5, orbitals: 0.3, aurora: 0.5, grid: 0.28,
+      holograms: false, cursorLight: true, accent: "cyan",
+    };
+  }
+  if (/^\/projects/.test(pathname)) {
+    // Project universe — emerald/purple workshop.
+    return {
+      rain: 0.25, particles: 0.7, orbitals: 0.5, aurora: 0.65, grid: 0.1,
+      holograms: true, cursorLight: true, accent: "emerald",
+    };
+  }
   if (/^\/practice/.test(pathname) || /^\/exams/.test(pathname)) {
     // Training arena / exam list — focused but alive.
     return {
@@ -160,15 +181,27 @@ function sanitize(raw: unknown): AtmospherePrefs {
     cursorLight: bool(o.cursorLight, DEFAULT_PREFS.cursorLight),
     holograms: bool(o.holograms, DEFAULT_PREFS.holograms),
     reducedMotion: bool(o.reducedMotion, DEFAULT_PREFS.reducedMotion),
-    sound: false, // no audio backend — always off
+    // Sound is always-on (no user toggle); stored sound prefs are ignored.
+    sound: true,
   };
 }
+
+const LEGACY_PREFS_KEY = "javoodle.atmosphere.v1";
 
 export function loadPrefs(): AtmospherePrefs {
   if (typeof window === "undefined") return DEFAULT_PREFS;
   try {
     const raw = localStorage.getItem(PREFS_KEY);
     if (raw) return sanitize(JSON.parse(raw));
+    // v1 → v2 migration: the old panel exposed per-effect controls. The new
+    // product direction is a single balanced default, so visual prefs reset
+    // to DEFAULT_PREFS. Sound was forced off in v1 (no real choice existed),
+    // so the new default applies; an explicit v2 sound choice is preserved.
+    const legacy = localStorage.getItem(LEGACY_PREFS_KEY);
+    if (legacy) {
+      // v1 sound was forced false (no real choice existed) → new defaults apply.
+      return { ...DEFAULT_PREFS };
+    }
   } catch {
     /* ignore */
   }
@@ -183,4 +216,4 @@ export function savePrefs(prefs: AtmospherePrefs) {
   }
 }
 
-export const PREFS_KEY = "javoodle.atmosphere.v1";
+export const PREFS_KEY = "javoodle.atmosphere.v2";

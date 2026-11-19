@@ -23,7 +23,7 @@ function InlineCode({ text }: { text: string }) {
 const noteTones = {
   info: { icon: Lightbulb, cls: "border-lav-300/60 bg-lav-50 text-ink-600", iconCls: "text-lav-500" },
   exam: { icon: GraduationCap, cls: "border-sun-300/70 bg-sun-50 text-ink-700", iconCls: "text-sun-500" },
-  warning: { icon: AlertTriangle, cls: "border-red-300/60 bg-red-50 text-ink-700", iconCls: "text-red-400" },
+  warning: { icon: AlertTriangle, cls: "border-red-300/60 bg-red-500/10 text-ink-700", iconCls: "text-red-400" },
 } as const;
 
 export function LessonBlocks({ blocks }: { blocks: LessonBlock[] }) {

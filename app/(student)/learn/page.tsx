@@ -12,6 +12,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { Reveal, RevealItem } from "@/components/ui/Reveal";
 import { BackButton } from "@/components/student/BackButton";
+import { LearningGalaxy } from "@/components/experience/LearningGalaxy";
 
 export const metadata: Metadata = { title: "Learn" };
 export const instant = false;
@@ -57,6 +58,13 @@ export default async function LearnPage() {
             </div>
             <Chip tone="lav">{totalLessons > 0 ? Math.round((doneLessons / totalLessons) * 100) : 0}%</Chip>
           </Card>
+        </RevealItem>
+      )}
+
+      {withLessons.length > 0 && (
+        <RevealItem>
+          <h2 className="mb-3 text-sm font-extrabold uppercase tracking-widest text-ink-400">Your syllabus galaxy</h2>
+          <LearningGalaxy units={withLessons.map((t) => ({ id: t.id, phase: t.phase, name: t.name, lessons: t.lessonCount, completed: t.completedCount }))} />
         </RevealItem>
       )}
 

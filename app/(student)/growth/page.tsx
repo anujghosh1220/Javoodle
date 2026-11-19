@@ -12,6 +12,9 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { Reveal, RevealItem } from "@/components/ui/Reveal";
 import { BackButton } from "@/components/student/BackButton";
+import { AchievementConstellation } from "@/components/experience/AchievementConstellation";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { isSupabaseConfigured, hasServiceRoleKey } from "@/lib/env";
 
 export const metadata: Metadata = { title: "My Growth" };
 export const instant = false;
@@ -22,6 +25,22 @@ export default async function GrowthPage() {
   if (!session) redirect("/");
   const g = await getGrowthData(session.studentId);
   const hasData = g.persistent && (g.xp > 0 || g.practiceAttempted > 0 || g.lessonsCompleted > 0 || g.examsTaken > 0 || g.codingSubmissions > 0);
+
+  // Achievement constellation data — real unlock records only.
+  const unlockedCodes = new Set<string>();
+  const unlockedAt = new Map<string, string>();
+  if (isSupabaseConfigured() && hasServiceRoleKey()) {
+    const admin = createAdminClient();
+    const { data } = await admin
+      .from("student_achievements")
+      .select("unlocked_at,achievements(code)")
+      .eq("student_id", session.studentId!);
+    for (const row of data ?? []) {
+      const a = (row as { achievements: { code: string } | Array<{ code: string }> | null }).achievements;
+      const code = (Array.isArray(a) ? a[0]?.code : a?.code) ?? "";
+      if (code) { unlockedCodes.add(code); unlockedAt.set(code, row.unlocked_at); }
+    }
+  }
 
   const maxDay = Math.max(1, ...g.activityDays.map((d) => d.count));
 
@@ -185,6 +204,17 @@ export default async function GrowthPage() {
               </Card>
             </RevealItem>
           </div>
+
+          {/* Achievement Constellation */}
+          <RevealItem>
+            <Card className="p-5">
+              <h2 className="flex items-center gap-2 font-extrabold text-ink-800"><Trophy className="h-5 w-5 text-sun-400" /> Achievement Constellation</h2>
+              <p className="mt-1 text-sm font-semibold text-ink-400">Every star is earned through real activity — inspect any node for details.</p>
+              <div className="mt-4">
+                <AchievementConstellation unlockedCodes={unlockedCodes} unlockedAt={unlockedAt} />
+              </div>
+            </Card>
+          </RevealItem>
 
           {/* Milestones */}
           <RevealItem>

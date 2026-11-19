@@ -10,6 +10,7 @@ import { NameForm } from "@/components/landing/NameForm";
 import { MountReveal, ScrollReveal } from "@/components/landing/Motion";
 import { CurrentYear } from "@/components/landing/CurrentYear";
 import { getStudentSession } from "@/lib/student/session";
+import { Wordmark } from "@/components/ui/Wordmark";
 
 // Reads the session cookie to redirect returning students.
 export const instant = false;
@@ -350,9 +351,7 @@ export default async function Home() {
         {/* ============ SECTION 6 — FOOTER ============ */}
         <footer className="flex flex-col items-center gap-6 border-t border-cream-300/40 pb-4 pt-10 text-center">
           <div className="flex flex-col items-center gap-2">
-            <span className="text-2xl font-extrabold tracking-tight text-ink-800">
-              Jav<span className="text-lav-300">oo</span>dl<span className="text-mint-300">e</span>
-            </span>
+            <Wordmark className="text-2xl font-extrabold tracking-tight" accentClass="text-lav-300" />
             <p className="max-w-sm text-sm font-semibold text-ink-400">
               A Java learning companion for ICSE Class 10 — lessons, practice,
               coding and exam prep in one place.

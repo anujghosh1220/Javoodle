@@ -1,0 +1,2 @@
+# Performance
+No new canvas/rAF/interval loops. ExperienceEffects = one fixed div + CSS animation triggered per event (auto-cleans). XPReactor = SVG + framer-motion only on pulse. LevelUpOverlay/UnlockToast mount conditionally. Constellation/Galaxy are server-fed client comps, lazy by route. Expected bundle delta: small (6 new client components). Baseline FCP ~0.75–1.3s preserved — NOT re-measured this pass (NOT TESTED).

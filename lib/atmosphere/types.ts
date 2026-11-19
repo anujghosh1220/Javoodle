@@ -25,7 +25,7 @@ export interface AtmospherePrefs {
   holograms: boolean;
   /** User-requested reduced motion (in addition to OS preference). */
   reducedMotion: boolean;
-  /** Reserved for future sound feedback — always off by default. */
+  /** UI sound effects on/off — independent of visual effects. */
   sound: boolean;
 }
 
@@ -38,7 +38,7 @@ export const DEFAULT_PREFS: AtmospherePrefs = {
   cursorLight: true,
   holograms: true,
   reducedMotion: false,
-  sound: false,
+  sound: true,
 };
 
 /** Resolved, render-ready configuration for the current route + prefs. */

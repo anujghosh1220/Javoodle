@@ -1,0 +1,173 @@
+{
+  "results": [
+    {
+      "n": "login",
+      "s": "PASS",
+      "note": ""
+    },
+    {
+      "n": "xp-reactor-svg",
+      "s": "PASS",
+      "note": "2"
+    },
+    {
+      "n": "levelup-overlay",
+      "s": "PASS",
+      "note": ""
+    },
+    {
+      "n": "galaxy-units",
+      "s": "PASS",
+      "note": "91"
+    },
+    {
+      "n": "difficulty-tier",
+      "s": "PASS",
+      "note": ""
+    },
+    {
+      "n": "constellation-nodes",
+      "s": "FAIL",
+      "note": "0"
+    },
+    {
+      "n": "viz-7-examples",
+      "s": "PASS",
+      "note": "8 chips"
+    },
+    {
+      "n": "monaco",
+      "s": "FAIL",
+      "note": ""
+    },
+    {
+      "n": "reduced-motion",
+      "s": "PASS",
+      "note": "canvas-present"
+    },
+    {
+      "n": "single-canvas",
+      "s": "PASS",
+      "note": "{\"canvases\":1,\"rafLoops\":\"n/a-dom\"}"
+    }
+  ],
+  "errors": [],
+  "manifest": [
+    {
+      "file": "dashboard-reactor-1920.png",
+      "route": "/dashboard",
+      "state": "XPReactor+streak+rank"
+    },
+    {
+      "file": "levelup-overlay-1920.png",
+      "route": "/dashboard",
+      "state": "grand level-up"
+    },
+    {
+      "file": "learn-galaxy-1920.png",
+      "route": "/learn",
+      "state": "LearningGalaxy+topics"
+    },
+    {
+      "file": "missions-hub-1920.png",
+      "route": "/missions",
+      "state": "catalogue+tier colors"
+    },
+    {
+      "file": "mission-detail-1920.png",
+      "route": "/missions/prime-guardian",
+      "state": "briefing+editor"
+    },
+    {
+      "file": "growth-constellation-1920.png",
+      "route": "/growth",
+      "state": "AchievementConstellation"
+    },
+    {
+      "file": "visualizer-1920.png",
+      "route": "/visualizer",
+      "state": "example 0"
+    },
+    {
+      "file": "viz-ex0-1920.png",
+      "route": "/visualizer",
+      "state": "example 0"
+    },
+    {
+      "file": "viz-ex1-1920.png",
+      "route": "/visualizer",
+      "state": "example 1"
+    },
+    {
+      "file": "viz-ex2-1920.png",
+      "route": "/visualizer",
+      "state": "example 2"
+    },
+    {
+      "file": "viz-ex3-1920.png",
+      "route": "/visualizer",
+      "state": "example 3"
+    },
+    {
+      "file": "viz-ex4-1920.png",
+      "route": "/visualizer",
+      "state": "example 4"
+    },
+    {
+      "file": "viz-ex5-1920.png",
+      "route": "/visualizer",
+      "state": "example 5"
+    },
+    {
+      "file": "viz-ex6-1920.png",
+      "route": "/visualizer",
+      "state": "example 6"
+    },
+    {
+      "file": "projects-1920.png",
+      "route": "/projects",
+      "state": "catalogue"
+    },
+    {
+      "file": "coding-monaco-1920.png",
+      "route": "/coding",
+      "state": "Monaco workspace"
+    },
+    {
+      "file": "playground-1920.png",
+      "route": "/playground",
+      "state": "editor ready"
+    },
+    {
+      "file": "dashboard-1440.png",
+      "route": "/dashboard",
+      "state": "auto"
+    },
+    {
+      "file": "missions-1440.png",
+      "route": "/missions",
+      "state": "auto"
+    },
+    {
+      "file": "growth-1440.png",
+      "route": "/growth",
+      "state": "auto"
+    },
+    {
+      "file": "learn-1440.png",
+      "route": "/learn",
+      "state": "auto"
+    },
+    {
+      "file": "visualizer-1440.png",
+      "route": "/visualizer",
+      "state": "auto"
+    },
+    {
+      "file": "dashboard-reduced-1440.png",
+      "route": "/dashboard",
+      "state": "reduced motion"
+    }
+  ],
+  "perf": "see stdout"
+}

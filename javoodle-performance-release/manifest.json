@@ -1,0 +1,1 @@
+{"before":"route-performance-before.json","measure":"measure.mjs","changes":["app/(student)/missions/page.tsx parallel fetch"],"classifications":{"student-routes":"PASS(~1s FCP)","missions-fetch":"IMPROVED","admin":"BLOCKED","lcp-inp-cls":"NOT TESTED"}}

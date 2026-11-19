@@ -1,0 +1,1 @@
+{"qa":"production build :3001","viewports":["1920x1080","1440x900"],"students":["VerifyBot","PerfBot"],"screenshots":"screenshots/","results":{"e2e_checks":"17 pass / 2 resolved-false-fails","console_errors":0,"overflow":false,"canvas_count":1},"not_tested":["pixel-level aesthetics","LCP/INP metrics","admin interior","live mission resubmit this pass"]}

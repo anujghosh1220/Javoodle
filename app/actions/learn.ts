@@ -36,13 +36,18 @@ export async function completeLessonAction(lessonId: string) {
     });
     if (error) return { ok: false as const, error: "Could not save progress — please try again.", xpAwarded: 0 };
 
-    await admin.from("xp_events").insert({
+    const { error: xpError } = await admin.from("xp_events").insert({
       student_id: session.studentId,
       session_id: session.sessionRowId,
       amount: LESSON_XP,
       reason: "lesson_completed",
       ref_id: lessonId,
     });
+    // 23505 = unique violation from xp_events_lesson_once index → a concurrent
+    // request already awarded this reward; treat as already completed.
+    if (xpError && xpError.code !== "23505") {
+      return { ok: false as const, error: "Could not save progress — please try again.", xpAwarded: 0 };
+    }
   }
 
   revalidatePath("/learn");

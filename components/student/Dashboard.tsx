@@ -5,6 +5,11 @@ import { motion } from "framer-motion";
 import { Code2, ClipboardList, ArrowRight, LogOut, User, Zap, HelpCircle, FileCheck2, Trophy, History, Clock, BookOpen, PlayCircle, Brain, TrendingUp } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { AtmosphereSettings } from "@/components/atmosphere/AtmosphereSettings";
+import { UnlockToast } from "@/components/achievements/UnlockToast";
+import { XPReactor } from "@/components/experience/XPReactor";
+import { LevelUpOverlay } from "@/components/experience/LevelUpOverlay";
+import { StreakFlame } from "@/components/experience/StreakFlame";
+import { rankForLevel, type AchievementDef } from "@/lib/achievements/defs";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { leaveJavoodle } from "@/app/actions/student";
 import type { DashboardStats, RecentActivity } from "@/lib/student/stats";
@@ -28,12 +33,18 @@ const quickLinks = [
   { href: "/growth", label: "Growth", icon: TrendingUp, tone: "bg-lav-100 text-lav-600" },
 ];
 
-export function Dashboard({ name, stats, activity, nextLesson }: {
+export function Dashboard({ name, stats, activity, nextLesson, level = 1, xpInto = 0, xpForNext = 150, streak = 0, newAchievements = [] }: {
   name: string;
   stats: DashboardStats;
   activity: RecentActivity;
   nextLesson: { lessonId: string; title: string; topicName: string } | null;
+  level?: number;
+  xpInto?: number;
+  xpForNext?: number;
+  streak?: number;
+  newAchievements?: AchievementDef[];
 }) {
+  const rank = rankForLevel(level);
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
   const hasActivity = activity.lastExam || activity.lastCoding || activity.latestResult || activity.pendingEvals > 0;
@@ -65,8 +76,18 @@ export function Dashboard({ name, stats, activity, nextLesson }: {
           <p className="mt-2 text-lg font-semibold text-ink-500">
             {greeting} — ready for another little Java adventure?
           </p>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <p className="inline-flex items-center gap-1.5 rounded-full border border-lav-300/40 bg-lav-100/60 px-3.5 py-1 text-xs font-extrabold uppercase tracking-wider text-lav-400">
+              <Trophy className="h-3.5 w-3.5" /> {rank.current.title} · Level {level}
+            </p>
+            <StreakFlame streak={streak} />
+          </div>
         </div>
+        <XPReactor xp={stats.xp} level={level} xpInto={xpInto} xpForNext={xpForNext} />
       </motion.section>
+
+      {newAchievements.length > 0 && <UnlockToast defs={newAchievements} />}
+      <LevelUpOverlay level={level} />
 
       {/* Real stats strip — only shown when persistent data exists */}
       {stats.persistent && (

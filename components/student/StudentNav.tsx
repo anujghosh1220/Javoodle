@@ -3,14 +3,18 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { BookOpen, Brain, Code2, ClipboardList, FlaskConical, TrendingUp } from "lucide-react";
+import { BookOpen, Brain, Code2, ClipboardList, FlaskConical, TrendingUp, Target, Eye, Hammer } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Wordmark } from "@/components/ui/Wordmark";
 
 const items = [
   { href: "/learn", label: "Learn", icon: BookOpen },
   { href: "/practice", label: "Practice", icon: Brain },
+  { href: "/missions", label: "Missions", icon: Target },
   { href: "/coding", label: "Coding Lab", icon: Code2 },
   { href: "/playground", label: "Playground", icon: FlaskConical },
+  { href: "/visualizer", label: "Visualizer", icon: Eye },
+  { href: "/projects", label: "Projects", icon: Hammer },
   { href: "/exams", label: "Exams", icon: ClipboardList },
   { href: "/growth", label: "Growth", icon: TrendingUp },
 ];
@@ -25,9 +29,7 @@ export function StudentNav() {
     >
       <div className="mx-auto flex h-16 w-full max-w-[1500px] items-center justify-between gap-2 px-4 sm:px-6">
         <Link href="/dashboard" className="flex items-center gap-2">
-          <span className="text-xl font-extrabold tracking-tight text-ink-800">
-            Jav<span className="text-lav-400">oo</span>dl<span className="text-mint-500">e</span>
-          </span>
+          <Wordmark className="text-xl font-extrabold tracking-tight" accentClass="text-lav-400" />
         </Link>
 
         <ul className="flex items-center gap-1 overflow-x-auto">
